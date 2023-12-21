@@ -21,7 +21,7 @@
     },
     "autoload": {
         "files":["init.php"],
-        "psr-4": {"wlib\\Application": "src/"}
+        "psr-4": {"wlib\\Application\\": "src/"}
     },
     "config": {
         "allow-plugins": {
