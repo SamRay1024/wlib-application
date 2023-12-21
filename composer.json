@@ -1,0 +1,29 @@
+{
+    "name": "wlib/wlib",
+    "description": "Usefull PHP Tools",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Cédric Ducarre",
+            "email": "samray1024@gmail.com"
+        }
+    ],
+    "require": {
+        "tracy/tracy": "^2.9",
+        "wlib/http-server": "^1.0",
+        "wlib/dibox": "^1.0",
+        "wlib/db": "^1.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.5"
+    },
+    "autoload": {
+        "files":["init.php"],
+        "psr-4": {"wlib\\": "src/classes/"}
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

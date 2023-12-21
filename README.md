@@ -1,2 +1,5 @@
 # wlib-application
-Extra light PHP application framework.
+
+Objectif : proposer un framework simple et léger pour PHP.
+
+**WIP**
