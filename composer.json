@@ -1,7 +1,9 @@
 {
-    "name": "wlib/wlib",
-    "description": "Usefull PHP Tools",
-    "type": "project",
+    "name": "wlib/application",
+    "description": "Light and easy PHP framework",
+    "type": "library",
+    "keywords": ["framework","wlib"],
+    "license": "CECILL-2.1",
     "authors": [
         {
             "name": "Cédric Ducarre",
@@ -19,7 +21,7 @@
     },
     "autoload": {
         "files":["init.php"],
-        "psr-4": {"wlib\\": "src/classes/"}
+        "psr-4": {"wlib\\Application": "src/"}
     },
     "config": {
         "allow-plugins": {
