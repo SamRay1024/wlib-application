@@ -4,72 +4,75 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "165c3082a407418cd0cee9b93b556933",
+    "content-hash": "87bc4d1d0aaf47ec0412738c7187afe3",
     "packages": [
         {
-            "name": "kint-php/kint",
-            "version": "5.0.5",
+            "name": "pomo/pomo",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kint-php/kint.git",
-                "reference": "1033fc4a5075e15b9b46be20c246069ab44bc243"
+                "url": "https://github.com/LeoColomb/pomo.git",
+                "reference": "b1e53a997850496369634d574fa6b508091fc353"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kint-php/kint/zipball/1033fc4a5075e15b9b46be20c246069ab44bc243",
-                "reference": "1033fc4a5075e15b9b46be20c246069ab44bc243",
+                "url": "https://api.github.com/repos/LeoColomb/pomo/zipball/b1e53a997850496369634d574fa6b508091fc353",
+                "reference": "b1e53a997850496369634d574fa6b508091fc353",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=5.3.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3",
-                "phpspec/prophecy-phpunit": "^2",
-                "phpunit/phpunit": "^9",
-                "seld/phar-utils": "^1",
-                "symfony/finder": "^4.0 || ^5.0 || ^6.0",
-                "vimeo/psalm": "^5@dev"
-            },
-            "suggest": {
-                "kint-php/kint-helpers": "Provides extra helper functions",
-                "kint-php/kint-twig": "Provides d() and s() functions in twig templates"
+                "phpunit/phpunit": "^4.0 || ^7.0",
+                "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "init.php"
-                ],
                 "psr-4": {
-                    "Kint\\": "src/"
+                    "POMO\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "GPL-2.0+"
             ],
             "authors": [
                 {
-                    "name": "Jonathan Vollebregt",
-                    "homepage": "https://github.com/jnvsor"
+                    "name": "WordPress",
+                    "homepage": "https://wordpress.org",
+                    "role": "Author"
                 },
                 {
-                    "name": "Contributors",
-                    "homepage": "https://github.com/kint-php/kint/graphs/contributors"
+                    "name": "Léo Colombaro",
+                    "homepage": "https://colombaro.fr",
+                    "role": "Maintainer"
                 }
             ],
-            "description": "Kint - debugging tool for PHP developers",
-            "homepage": "https://kint-php.github.io/kint/",
+            "description": "Gettext library to translate with i18n",
+            "homepage": "https://github.com/LeoColomb/pomo",
             "keywords": [
-                "debug",
-                "kint",
-                "php"
+                "gettext",
+                "i18n",
+                "internationalization",
+                "localization",
+                "translation"
             ],
             "support": {
-                "issues": "https://github.com/kint-php/kint/issues",
-                "source": "https://github.com/kint-php/kint/tree/5.0.5"
+                "issues": "https://github.com/LeoColomb/pomo/issues",
+                "source": "https://github.com/LeoColomb/pomo/tree/v1.5.0"
             },
-            "time": "2023-03-08T14:50:41+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/LeoColomb",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/LeoColomb",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2023-01-06T01:05:43+00:00"
         },
         {
             "name": "psr/container",
@@ -353,6 +356,59 @@
                 "source": "https://github.com/SamRay1024/wlib-http-server/tree/v1.0"
             },
             "time": "2023-09-24T21:47:45+00:00"
+        },
+        {
+            "name": "wlib/i18n",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SamRay1024/wlib-i18n.git",
+                "reference": "12c61684e3ae771195fb15f43c415ae400bef931"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SamRay1024/wlib-i18n/zipball/12c61684e3ae771195fb15f43c415ae400bef931",
+                "reference": "12c61684e3ae771195fb15f43c415ae400bef931",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "pomo/pomo": "^1.5"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "wlib\\I18n\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CECILL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Cédric Ducarre",
+                    "email": "samray1024@gmail.com"
+                }
+            ],
+            "description": "Brings internationalization tools to your PHP project.",
+            "keywords": [
+                "helpers",
+                "i18n",
+                "internationalization",
+                "l10n",
+                "localisation",
+                "utils",
+                "wlib"
+            ],
+            "support": {
+                "issues": "https://github.com/SamRay1024/wlib-i18n/issues",
+                "source": "https://github.com/SamRay1024/wlib-i18n/tree/v1.0.0"
+            },
+            "time": "2024-02-24T22:46:32+00:00"
         },
         {
             "name": "wlib/tools",

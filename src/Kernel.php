@@ -127,8 +127,9 @@ class Kernel extends DiBox
 	private function initTimeAndLocale()
 	{
 		date_default_timezone_set(config('app.timezone', 'Europe/Paris'));
-
-		// TODO : start translation service
+	
+		$this->register(Providers\L10nDiProvider::class);
+		$this->get('translator');
 	}
 
 	/**

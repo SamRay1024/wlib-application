@@ -14,7 +14,8 @@
         "tracy/tracy": "^2.9",
         "wlib/http-server": "^1.0",
         "wlib/dibox": "^1.0",
-        "wlib/db": "^1.0"
+        "wlib/db": "^1.0",
+        "wlib/i18n": "^1.0"
     },
     "require-dev": {
         "pestphp/pest": "^2.5"
