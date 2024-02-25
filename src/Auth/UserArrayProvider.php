@@ -91,7 +91,7 @@ class UserArrayProvider implements IUserProvider
 			'id'        => $sKey,
 			'key'       => $sKey,
 			'username'  => $sUsername,
-			'password'  => '',
+			'password'  => $sKey,
 			'can_login' => '1',
 		]);
 	}
@@ -108,10 +108,10 @@ class UserArrayProvider implements IUserProvider
 			return null;
 
 		return new User([
-			'id'        => $this->aUsersList[$sUsername],
-			'key'       => $this->aUsersList[$sUsername],
+			'id'        => $sUsername,
+			'key'       => $sUsername,
 			'username'  => $sUsername,
-			'password'  => '',
+			'password'  => $this->aUsersList[$sUsername],
 			'can_login' => '1',
 		]);
 	}
