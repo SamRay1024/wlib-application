@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /* ==== LICENCE AGREEMENT =====================================================
  *
@@ -42,11 +40,7 @@ use wlib\Application\Auth\BasicAuthProvider;
 use wlib\Application\Auth\KeyAuthProvider;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
-use wlib\Application\Auth\KeyProvider;
 use wlib\Application\Auth\PublicAuthProvider;
-use wlib\Application\Auth\WsseProvider;
-use wlib\Application\Auth\PublicProvider;
-use wlib\Application\Auth\User;
 use wlib\Application\Auth\UserArrayProvider;
 use wlib\Application\Auth\WsseAuthProvider;
 
@@ -61,7 +55,7 @@ class AuthDiProvider implements DiBoxProvider
 	{
 		$box->singleton('auth.userprovider', function ($box, $args)
 		{
-			return new UserArrayProvider(config('app.users', ['public' => 'public']));
+			return new UserArrayProvider(config('app.users', []));
 		});
 
 		$box->singleton('auth.public', function ($box, $args)
