@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /* ==== LICENCE AGREEMENT =====================================================
  *
@@ -36,6 +38,7 @@
 
 namespace wlib\Application\Providers;
 
+use wlib\Application\Auth\BasicAuthProvider;
 use wlib\Application\Auth\KeyAuthProvider;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
@@ -58,25 +61,29 @@ class AuthDiProvider implements DiBoxProvider
 	{
 		$box->singleton('auth.userprovider', function ($box, $args)
 		{
-			return new UserArrayProvider(arrayValue($box, 'app.users', ['public' => 'public']));
+			return new UserArrayProvider(config('app.users', ['public' => 'public']));
 		});
-
 
 		$box->singleton('auth.public', function ($box, $args)
 		{
 			return new PublicAuthProvider($box['http.request']);
 		});
 
+		$box->singleton('auth.basic', function ($box, $args)
+		{
+			return new BasicAuthProvider($box['http.request'], $box['auth.userprovider']);
+		});
+
 		$box->singleton('auth.key', function ($box, $args)
 		{
-			return new KeyAuthProvider($box['http.request'], $box['app.userprovider']);
+			return new KeyAuthProvider($box['http.request'], $box['auth.userprovider']);
 		});
 
 		$box->singleton('auth.wsse', function ($box, $args)
 		{
 			return new WsseAuthProvider(
 				$box['http.request'],
-				$box['app.userprovider'],
+				$box['auth.userprovider'],
 				config('app.nonces_path')
 			);
 		});
