@@ -36,6 +36,8 @@
 
 namespace wlib\Application\Auth;
 
+use wlib\Http\Server\Request;
+
 /**
  * HTTP Basic authentication.
  *
@@ -45,15 +47,17 @@ class BasicAuthProvider extends AuthProvider
 {
 	/**
 	 * Authenticate user.
+	 * 
+	 * @param \wlib\Http\Server\Request $request
 	 */
-	public function authenticate()
+	public function authenticate(Request $request)
 	{
 		try
 		{
 			$sBasicRegex = '`Basic (.+)`';
 			if (preg_match(
 					$sBasicRegex,
-					$this->request->getHeader('Authorization'),
+					$request->getHeader('Authorization', ''),
 					$matches
 				) !== 1
 			)

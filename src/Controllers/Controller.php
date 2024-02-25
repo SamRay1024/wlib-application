@@ -36,6 +36,7 @@
 
 namespace wlib\Application\Controllers;
 
+use RuntimeException;
 use wlib\Application\Auth\AuthenticateException;
 use wlib\Application\Auth\IAuthProvider;
 use wlib\Application\Auth\IUser;
@@ -82,13 +83,13 @@ abstract class Controller
 	 * Authentication provider.
 	 * @var \wlib\Application\Auth\IAuthProvider
 	 */
-	protected IAuthProvider $auth;
+	protected ?IAuthProvider $auth;
 
 	/**
 	 * Authenticated user.
 	 * @var \wlib\Application\Auth\IUser
 	 */
-	protected IUser $user;
+	protected ?IUser $user;
 
 	/**
 	 * HTTP cache handler.
@@ -195,7 +196,7 @@ abstract class Controller
 	 * By default, "auth.public" provider provide a default public user for
 	 * controllers which doesn't have to protect access.
 	 * 
-	 * @return string
+	 * @return string|array
 	 */
 	protected function authentification()
 	{
@@ -209,7 +210,7 @@ abstract class Controller
 	 *
 	 * @return boolean `false`to forbide access to controller.
 	 */
-	protected function allow()
+	protected function allow(): bool
 	{
 		return true;
 	}
@@ -219,11 +220,26 @@ abstract class Controller
 	 */
 	protected function authenticate()
 	{
-		$this->auth = $this->app[$this->authentification()];
+		$mAuthentification = $this->authentification();
+
+		if (is_string($mAuthentification))
+			$this->auth = $this->app->get($mAuthentification);
+		
+		elseif (is_array($mAuthentification))
+		{
+			$this->auth = $this->app->get(key($mAuthentification), current($mAuthentification));
+		}
+
+		if (is_null($this->auth))
+			throw new RuntimeException(
+				'Invalid authentification provider : '
+				.print_r($mAuthentification)
+				.'.'
+			);
 
 		try
 		{
-			$this->auth->authenticate();
+			$this->auth->authenticate($this->request);
 			$this->user = $this->auth->getUser();
 
 			if (!$this->user)

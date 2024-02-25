@@ -36,6 +36,8 @@
 
 namespace wlib\Application\Auth;
 
+use wlib\Http\Server\Request;
+
 /**
  * Authentication providers contract.
  *
@@ -45,12 +47,15 @@ interface IAuthProvider
 {
 	/**
 	 * Authenticate an HTTP request.
+	 * 
+	 * @param \wlib\Http\Server\Request $request HTTP request.
 	 */
-	public function authenticate();
+	public function authenticate(Request $request);
 
 	/**
 	 * Get authenticated user.
-	 * @return \Corsr\System\IUser
+	 * 
+	 * @return \wlib\Application\Auth\IUser|null
 	 */
-	public function getUser();
+	public function getUser(): ?IUser;
 }

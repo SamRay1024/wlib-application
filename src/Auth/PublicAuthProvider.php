@@ -46,17 +46,16 @@ use wlib\Http\Server\Request;
 class PublicAuthProvider extends AuthProvider
 {
 	/**
-	 * @param \wlib\Http\Server\Request $request HTTP request.
+	 * Redefinition of the constructor as it doesn't need a user provider.
 	 */
-	public function __construct(Request $request)
-	{
-		$this->request = $request;
-	}
+	public function __construct() {}
 
 	/**
 	 * Authentifier l'utilisateur.
+	 * 
+	 * @param \wlib\Http\Server\Request $request HTTP request.
 	 */
-	public function authenticate()
+	public function authenticate(Request $request)
 	{
 		$this->user = new User([
 			'id'		=> 'public',
