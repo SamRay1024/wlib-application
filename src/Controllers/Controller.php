@@ -684,4 +684,16 @@ abstract class Controller
 			$aHeaders
 		);
 	}
+
+	/**
+	 * Redirect and exit.
+	 *
+	 * @param string $sURL Redirect URL.
+	 * @param int $iStatusCode HTTP status code.
+	 */
+	public function redirect(string $sURL, int $iStatusCode = 307)
+	{
+		$this->response->redirect($sURL, $iStatusCode);
+		exit();
+	}
 }
