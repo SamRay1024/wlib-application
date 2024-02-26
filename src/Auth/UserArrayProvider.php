@@ -64,23 +64,23 @@ class UserArrayProvider implements IUserProvider
 	}
 
 	/**
-	 * Alias de `getByKey()`.
+	 * Alias of `getByKey()`.
 	 *
-	 * @param mixed $mId Clé de l'utilisateur.
+	 * @param mixed $mId User ID.
 	 * @return IUser|null
 	 */
-	public function getById($mId): ?IUser
+	public function getById(mixed $mId): ?IUser
 	{
 		return $this->getByKey($mId);
 	}
 
 	/**
-	 * Obtenir l'utilisateur depuis sa clé d'API.
+	 * Get an user from its key (API, ...).
 	 *
-	 * @param string $sKey Clé d'API.
+	 * @param string $sKey Key value.
 	 * @return IUser|null
 	 */
-	public function getByKey($sKey): ?IUser
+	public function getByKey(string $sKey): ?IUser
 	{
 		$sUsername = array_search($sKey, $this->aUsersList, true);
 
@@ -97,12 +97,12 @@ class UserArrayProvider implements IUserProvider
 	}
 
 	/**
-	 * Obtenir l'utilisateur depuis son nom d'utilisateur.
+	 * Get an user from ist username.
 	 *
-	 * @param string $sUsername
+	 * @param string $sUsername Username value.
 	 * @return IUser|null
 	 */
-	public function getByUsername($sUsername): ?IUser
+	public function getByUsername(string $sUsername): ?IUser
 	{
 		if (!isset($this->aUsersList[$sUsername]))
 			return null;
