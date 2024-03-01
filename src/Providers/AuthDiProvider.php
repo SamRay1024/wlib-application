@@ -36,13 +36,17 @@
 
 namespace wlib\Application\Providers;
 
+use LogicException;
 use wlib\Application\Auth\BasicAuthProvider;
 use wlib\Application\Auth\KeyAuthProvider;
-use wlib\Di\DiBox;
-use wlib\Di\DiBoxProvider;
 use wlib\Application\Auth\PublicAuthProvider;
 use wlib\Application\Auth\UserArrayProvider;
+use wlib\Application\Auth\UserDbProvider;
+use wlib\Application\Auth\WebAuthProvider;
+use wlib\Application\Auth\WebGuard;
 use wlib\Application\Auth\WsseAuthProvider;
+use wlib\Di\DiBox;
+use wlib\Di\DiBoxProvider;
 
 /**
  * Authentication service provider.
@@ -55,7 +59,19 @@ class AuthDiProvider implements DiBoxProvider
 	{
 		$box->singleton('auth.userprovider', function ($box, $args)
 		{
-			return new UserArrayProvider(config('app.users', []));
+			switch (config('app.users.provider'))
+			{
+				case 'database':
+					return new UserDbProvider($box['db.'. config('app.users.database')]);
+
+				case 'array':
+					return new UserArrayProvider(config('app.users', []));
+			}
+
+			throw new LogicException(
+				'Unknown "app.users.provider" config. '
+				.'Please choose a value among : "database", "array".'
+			);
 		});
 
 		$box->singleton('auth.public', function ($box, $args)
@@ -79,6 +95,19 @@ class AuthDiProvider implements DiBoxProvider
 				$box['http.request'],
 				$box['auth.userprovider'],
 				config('app.nonces_path')
+			);
+		});
+
+		$box->singleton('auth.web', function ($box, $args)
+		{
+			return new WebAuthProvider($box['guard.web']);
+		});
+
+		$box->singleton('guard.web', function ($box, $args)
+		{
+			return new WebGuard(
+				$box['http.session'],
+				$box['auth.userprovider']
 			);
 		});
 	}
