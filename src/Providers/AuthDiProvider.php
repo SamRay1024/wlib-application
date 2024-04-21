@@ -106,6 +106,7 @@ class AuthDiProvider implements DiBoxProvider
 		$box->singleton('guard.web', function ($box, $args)
 		{
 			return new WebGuard(
+				$box,
 				$box['http.session'],
 				$box['auth.userprovider']
 			);

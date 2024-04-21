@@ -102,9 +102,9 @@ class UserDbProvider implements IUserProvider
 	private function fetchUser(string $sColumn, string $sValue): ?IUser
 	{
 		$query = $this->db->query()
-			->select(['id', 'username', 'password', 'key', 'can_login'])
+			->select(['id', 'name', 'email', 'password', 'can_login'])
 			->from('users')
-			->where($sColumn.' = :value')
+			->where($sColumn .' = :value')
 			->setParameter(':value', $sValue, \PDO::PARAM_STR)
 			->run();
 
@@ -115,11 +115,12 @@ class UserDbProvider implements IUserProvider
 			return null;
 
 		return new User([
-			'id'        => (int) $row->id,
-			'key'       => $row->key,
-			'username'  => $row->username,
-			'password'  => $row->password,
-			'can_login' => (bool) $row->can_login
+			'id'		=> (int) $row->id,
+			'key'		=> $row->email,
+			'name'		=> $row->name,
+			'username'	=> $row->email,
+			'password'	=> $row->password,
+			'can_login'	=> (bool) $row->can_login
 		]);
 	}
 }

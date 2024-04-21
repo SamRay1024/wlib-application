@@ -376,17 +376,17 @@ abstract class Controller
 	}
 
 	/* ==== UTILS =========================================================== */
-
+	
 	/**
 	 * Make a unique ID string for controller.
 	 */
 	protected function makeUniqueId()
 	{
 		$sRequestUri = trim($this->request->getPathInfo(), '/');
-
+		
 		$this->sUid = ($sRequestUri ? str_replace('/', '-', $sRequestUri) : 'index');
 	}
-
+	
 	/**
 	 * Get the controller unique ID string.
 	 * 
@@ -395,20 +395,6 @@ abstract class Controller
 	public function getUid(): string
 	{
 		return $this->sUid;
-	}
-
-	/**
-	 * Get the requested HTTP method.
-	 * 
-	 * @param boolean $bReal Get the real HTTP method.
-	 * @return string|null
-	 */	
-	protected function method(bool $bReal = false): ?string
-	{
-		return ($bReal
-			? $this->request->getOriginalMethod()
-			: $this->request->getMethod()
-		);
 	}
 	
 	/**
@@ -422,7 +408,7 @@ abstract class Controller
 	{
 		return arrayValue($this->aArgs, $iIndex, $sDefault);
 	}
-
+	
 	/**
 	 * Get all route arguments.
 	 * 
@@ -432,6 +418,82 @@ abstract class Controller
 	{
 		return $this->aArgs;
 	}
+	
+	/* ==== REQUEST HELPERS ================================================= */
+
+	/**
+	 * Get the requested HTTP method.
+	 * 
+	 * @param boolean $bReal Get the real HTTP method.
+	 * @return string|null
+	 */
+	protected function method(bool $bReal = false): ?string
+	{
+		return ($bReal
+			? $this->request->getOriginalMethod()
+			: $this->request->getMethod()
+		);
+	}
+	
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isGet(): bool { return $this->request->isGet(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isPost(): bool { return $this->request->isPost(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isPut(): bool { return $this->request->isPut(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isPatch(): bool { return $this->request->isPatch(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isDelete(): bool { return $this->request->isDelete(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isOptions(): bool { return $this->request->isOptions(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isHead(): bool { return $this->request->isHead(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isFormData(): bool { return $this->request->isFormData(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isAjax(): bool { return $this->request->isAjax(); }
+
+	/**
+	 * @see \wlib\Http\Server\Request
+	 * @return bool
+	 */
+	protected function isJson(): bool { return $this->request->isJson(); }
 
 	/**
 	 * Get $_GET value.
@@ -507,6 +569,37 @@ abstract class Controller
 	protected function pathUri()
 	{
 		return $this->app['sys.route']['routed_path'];
+	}
+	
+	/**
+	 * Get a CSRF protection token.
+	 *
+	 * Don't forget to clean the token when your form handling is over.
+	 * 
+	 * @param string $sTokenName Token identifier.
+	 * @return string
+	 */
+	protected function getCsrfToken(string $sTokenName): string
+	{
+		return $this->session->getToken($sTokenName);
+	}
+
+	/**
+	 * Check CSRF protection token.
+	 * 
+	 * @param string $sTokenName Token identifier.
+	 * @param string $sFieldName Field name in witch token value has been put.
+	 * @throw HttpException if token no set or invalid.
+	 */
+	protected function checkCsrfToken(string $sTokenName, string $sFieldName = '_token')
+	{
+		if (
+			!$this->hasData($sFieldName)
+			|| !$this->session->isValidToken($sTokenName, $this->data($sFieldName))
+		)
+			throw new HttpException(Response::HTTP_METHOD_NOT_ALLOWED);
+
+		$this->session->removeToken($sTokenName);
 	}
 
 	/**
