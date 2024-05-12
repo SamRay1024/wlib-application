@@ -48,6 +48,20 @@ use wlib\Http\Server\Session;
  * 
  * The guard handles users web access : login, logout, register and renew password.
  * 
+ * The user account registration process is as follows :
+ * 
+ * - Go to the register URL to ask an email address,
+ * - Send a backlink to verify the given email address,
+ * - From this backlinhk : go to the user account creation form,
+ * - Redirect user to the login page when registration is successfull.
+ * 
+ * The user forgot password process is as follows :
+ * 
+ * - Go to the forgot URL to ask the user email address,
+ * - Send a backlink to the given email address,
+ * - From this backlink : go to the password renewal form,
+ * - Send a validation email and redirect user to the login page when password has been updated.
+ * 
  * @author Cédric Ducarre
  */
 class WebGuard
@@ -173,7 +187,7 @@ class WebGuard
 	 * 
 	 * @return boolean
 	 */
-	public function isLoggedIn()
+	public function isLoggedIn(): bool
 	{
 		return $this->session->has(self::SESS_USER_KEY);
 	}
@@ -183,7 +197,7 @@ class WebGuard
 	 * 
 	 * @return \wlib\Application\Auth\IUser
 	 */
-	public function getCurrentUser()
+	public function getCurrentUser(): ?IUser
 	{
 		return $this->session->get(self::SESS_USER_KEY);
 	}
@@ -220,19 +234,13 @@ class WebGuard
 			$dbuser->findId('email', $sUserEmail)
 		);
 
-		// TODO : create an email template
 		$mail = $this->app->get('mailer.mail');
 
 		$mail->addAddress($sUserEmail);
-		$mail->isHTML(true);
-		$mail->Subject	= __('Confirm your registration');
-		$mail->Body		= '<h1>Registration confirmation</h1>'
-			.'<p>To finalize your account registration, please click on the following link :</p>'
-			.'<p><a href="//'.config('app.base_url').$this->getVerifyUrl().'?vk='.urlencode($sToken).'">Confirm my email address</a></p>'
-			.'<p>If you haven\'t asked for an account registration, you can simply ignore and delete this message.</p>'
-		;
-		// $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
+		$mail->setTemplateBody('mails/auth/registration-confirmation', [
+			'confirmurl' => '//'. config('app.base_url') . $this->getVerifyUrl() .'?vk='. urlencode($sToken)
+		]);
+		
 		$mail->send();
 	}
 
@@ -284,18 +292,17 @@ class WebGuard
 			$iUserId
 		);
 	}
-	
+
 	/**
 	 * Start the password renewal procedure.
 	 * 
-	 * - Set a token in user account record,
-	 * - Send an email with a back link to renew password.
+	 * - Generate a token,
+	 * - Send an email to the user with a backlink to the password form.
 	 *
-	 * @param string $sUserEmail
-	 * @return void
-	 * @throws UnexpectedValueException if given user email is invalid.
+	 * @param string $sUserEmail User email address.
+	 * @throws UnexpectedValueException in case of invalid user email address.
 	 */
-	public function startforgotPassword(string $sUserEmail)
+	public function startForgotPassword(string $sUserEmail)
 	{
 		if (filter_var($sUserEmail, FILTER_VALIDATE_EMAIL) === false)
 			throw new UnexpectedValueException(
@@ -305,6 +312,8 @@ class WebGuard
 		/** @var \wlib\Application\Models\User $dbuser */
 		$dbuser = $this->app->getTable(User::class);
 
+		// TODO : prevent password renew flooding
+
 		if ($dbuser->isAccountActive($sUserEmail))
 		{
 			$sToken = md5(uniqid());
@@ -313,33 +322,25 @@ class WebGuard
 				$dbuser->findId('email', $sUserEmail)
 			);
 
-			// TODO : create an email template
 			$mail = $this->app->get('mailer.mail');
 
 			$mail->addAddress($sUserEmail);
-			$mail->isHTML(true);
-			$mail->Subject	= __('Password renewal confirmation');
-			$mail->Body		= '<h1>Password renewal confirmation</h1>'
-			. '<p>To renew your password, please click on the following link :</p>'
-			. '<p><a href="//' . config('app.base_url') . $this->getRenewUrl() .'?rk='. urlencode($sToken) .'">Renew my password</a></p>'
-			. '<p>If you haven\'s ask for a password renewal, you can simply ignore and delete this message.</p>'
-			;
-
+			$mail->setTemplateBody('mails/auth/renew-password', [
+				'renewurl' => '//'. config('app.base_url') . $this->getRenewUrl() .'?rk='. urlencode($sToken)
+			]);
 			$mail->send();
 		}
 	}
 	
 	/**
-	 * Save the new password for the given user ID.
-	 *
-	 * - Save the new password,
-	 * - Clear the user token,
-	 * - Send a confirmation email.
+	 * Save the user new password.
 	 * 
-	 * @param integer $iUserId User ID.
-	 * @param string $sPassword New password.
-	 * @return boolean
-	 * @throws LogicException
+	 * - Clean the token generated at the previous step,
+	 * - Send a confirmation email to the user.
+	 *
+	 * @param int $iUserId User ID.
+	 * @param string $sPassword User password.
+	 * @return bool
 	 */
 	public function renewPassword(int $iUserId, string $sPassword): bool
 	{
@@ -361,7 +362,10 @@ class WebGuard
 
 		if ($bUpdated)
 		{
-			// TODO : send mail
+			$mail = $this->app->get('mailer.mail');
+			$mail->addAddress($dbuser->findVal('email', $iUserId));
+			$mail->setTemplateBody('mails/auth/password-updated');
+			$mail->send();
 		}
 
 		// TODO : add hook event
@@ -370,9 +374,9 @@ class WebGuard
 	}
 	
 	/**
-	 * Get the login URL.
+	 * Get the login form URL.
 	 *
-	 * @param string $sRedirectTo URL to redirect after successfull login.
+	 * @param string $sRedirectTo Optional redirect URL.
 	 * @return string
 	 */
 	public function getLoginUrl(string $sRedirectTo = ''): string
@@ -391,17 +395,17 @@ class WebGuard
 	}
 	
 	/**
-	 * Get the register URL.
-	 *
+	 * Get the register form URL.
+	 * 
 	 * @return string
 	 */
 	public function getRegisterUrl(): string
 	{
 		return $this->sRegisterUrl;
 	}
-
+	
 	/**
-	 * Get the verify email URL.
+	 * Get the verifying email address URL.
 	 *
 	 * @return string
 	 */
@@ -411,7 +415,7 @@ class WebGuard
 	}
 	
 	/**
-	 * Get the forgot password URL.
+	 * Get the forgot password form URL.
 	 *
 	 * @return string
 	 */
@@ -421,7 +425,7 @@ class WebGuard
 	}
 	
 	/**
-	 * Get the password renewal URL.
+	 * Get the renewal password form URL.
 	 *
 	 * @return string
 	 */
@@ -429,4 +433,6 @@ class WebGuard
 	{
 		return $this->sRenewUrl;
 	}
+
+	// TODO : add a method to delete unterminated registrations
 }

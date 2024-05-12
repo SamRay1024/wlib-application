@@ -47,15 +47,17 @@ class L10nDiProvider implements DiBoxProvider
 		$box->singleton('translator', function($box, $args)
 		{
 			$sLocalesPath = config('app.i18n_path');
-			$sLocale = config('app.i18n_locale', 'en_US');
+			$sLocale = trim(config('app.i18n_locale', 'en_US'));
 			$translator = new Translator();
 
 			if ($sLocalesPath && $sLocale)
 			{
+				$box['app.locale'] = $sLocale;
+
 				$translator->addTranslationsFile(
 					makeCanonical($sLocalesPath)
-						. trim(config('app.i18n_locale', 'en_US'))
-						. '.mo'
+						. $sLocale
+						.'.mo'
 				);
 			}
 
