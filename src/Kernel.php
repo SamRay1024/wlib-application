@@ -149,6 +149,7 @@ class Kernel extends DiBox
 	{
 		$this->register(Providers\HttpServerDiProvider::class);
 		$this->register(Providers\SysDiProvider::class);
+		$this->register(Providers\TemplateEngineDiProvider::class);
 		$this->register(Providers\AuthDiProvider::class);
 	}
 
