@@ -37,6 +37,7 @@
 namespace wlib\Application\Controllers;
 
 use wlib\Application\Controllers\Controller;
+use wlib\Application\Templates\Engine;
 
 /**
  * Front controller.
@@ -45,34 +46,17 @@ use wlib\Application\Controllers\Controller;
  */
 abstract class FrontController extends Controller
 {
-	protected string $sTplPath = '';
-	protected string $sTplExt = '';
+	private Engine $templates;
 
 	public function initialize()
 	{
-		$this->sTplPath = rtrim(config('app.templates_path'), '/');
-		$this->sTplExt = config('app.templates_ext', '.html.php');
-
-		is_dir($this->sTplPath) or throw new \LogicException(sprintf(
-			'Templates dir "%s" not found. '
-			.'Check config "app.templates_path" entry or create dir.',
-			$this->sTplPath
-		));
+		$this->templates = $this->app['app.templates'];
 	}
 
 	protected function render($sTplFile, $aData = [])
 	{
-		$sTplFile = $this->sTplPath .'/'. ltrim($sTplFile, '/') . $this->sTplExt;
-		
-		file_exists($sTplFile) or throw new \LogicException(sprintf(
-			'Template file "%s" not found.',
-			$this->sTplPath
-		));
+		$aData['appname'] = config('app.name');
 
-		extract($aData);
-
-		ob_start();
-		include $sTplFile;
-		return ob_get_clean();
+		return $this->templates->render($sTplFile, $aData);
 	}
 }
