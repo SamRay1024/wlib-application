@@ -784,9 +784,31 @@ abstract class Controller
 	 * @param string $sURL Redirect URL.
 	 * @param int $iStatusCode HTTP status code.
 	 */
-	public function redirect(string $sURL, int $iStatusCode = 307)
+	public function redirect(string $sURL, int $iStatusCode = Response::HTTP_FOUND)
 	{
 		$this->response->redirect($sURL, $iStatusCode);
+		exit();
+	}
+	
+	/**
+	 * Redirect with 301 Moved Permanently status code and exit.
+	 *
+	 * @param string $sURL Redirect URL.
+	 */
+	public function redirectPermanent(string $sURL)
+	{
+		$this->response->redirect($sURL, Response::HTTP_MOVED_PERMANENTLY);
+		exit();
+	}
+
+	/**
+	 * Redirect with 303 See Other status code and exit.
+	 *
+	 * @param string $sURL Redirect URL.
+	 */
+	public function redirectAfterPost(string $sURL)
+	{
+		$this->response->redirect($sURL, Response::HTTP_SEE_OTHER);
 		exit();
 	}
 }
