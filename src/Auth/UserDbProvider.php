@@ -78,7 +78,7 @@ class UserDbProvider implements IUserProvider
 	 */
 	public function getByKey(string $sKey): ?IUser
 	{
-		return $this->fetchUser('key', $sKey);
+		return $this->fetchUser('email', $sKey);
 	}
 
 	/**
@@ -89,7 +89,7 @@ class UserDbProvider implements IUserProvider
 	 */
 	public function getByUsername(string $sUsername): ?IUser
 	{
-		return $this->fetchUser('username', $sUsername);
+		return $this->fetchUser('email', $sUsername);
 	}
 
 	/**
