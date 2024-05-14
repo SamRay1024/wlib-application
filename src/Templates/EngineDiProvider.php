@@ -34,49 +34,28 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application\Providers;
+namespace wlib\Application\Templates;
 
-use UnexpectedValueException;
-use wlib\Application\Router;
-use wlib\Db\Db;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
 
 /**
- * Application main services provider.
+ * Template engine provider.
  * 
  * @author Cédric Ducarre
  */
-class SysDiProvider implements DiBoxProvider
+class EngineDiProvider implements DiBoxProvider
 {
 	public function provide(DiBox $box)
 	{
-		$box->bind('sys.router', function($box, $args)
+		$box->bind('app.templates', function($box, $args)
 		{
-			return new Router($box['http.request'], $args[0]) /* base URI */;
+			$engine = new Engine(/* W_ROOT .'resources'. DS .'templates' */);
+			$engine
+				->addSrcPath(rtrim(config('app.templates_path'), '/'))
+				->setFileExtension(config('app.templates_ext', '.html.php'));
+
+			return $engine;
 		});
-	
-		$aDatabases = config('app.databases');
-
-		if (!is_array($aDatabases))
-			throw new UnexpectedValueException(
-				'Config entry "app.databases" must be an array of connections.'
-			);
-
-		foreach ($aDatabases as $sName => $aConnection)
-		{
-			$box->singleton('db.'.$sName, function($box, $args) use ($aConnection)
-			{
-				return new Db(
-					arrayValue($aConnection, 'driver'),
-					arrayValue($aConnection, 'database'),
-					arrayValue($aConnection, 'username'),
-					arrayValue($aConnection, 'password'),
-					arrayValue($aConnection, 'host'),
-					arrayValue($aConnection, 'port'),
-					arrayValue($aConnection, 'timeout')
-				);
-			});
-		}
 	}
 }

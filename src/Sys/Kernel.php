@@ -34,7 +34,7 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application;
+namespace wlib\Application\Sys;
 
 use wlib\Db\Table;
 use wlib\Di\DiBox;
@@ -94,7 +94,7 @@ class Kernel extends DiBox
 		ini_set('display_errors', !$this['sys.production']);
 		set_error_handler([$this, 'handleError']);
 
-		$this->register(Providers\DebugDiProvider::class);
+		$this->register(DebugDiProvider::class);
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Kernel extends DiBox
 	{
 		date_default_timezone_set(config('app.timezone', 'Europe/Paris'));
 	
-		$this->register(Providers\L10nDiProvider::class);
+		$this->register(\wlib\Application\L10n\L10nDiProvider::class);
 		$this->get('translator');
 	}
 
@@ -147,10 +147,9 @@ class Kernel extends DiBox
 	 */
 	private function initServices()
 	{
-		$this->register(Providers\HttpServerDiProvider::class);
-		$this->register(Providers\SysDiProvider::class);
-		$this->register(Providers\TemplateEngineDiProvider::class);
-		$this->register(Providers\AuthDiProvider::class);
+		$this->register(SysDiProvider::class);
+		$this->register(\wlib\Application\Templates\EngineDiProvider::class);
+		$this->register(\wlib\Application\Auth\AuthDiProvider::class);
 	}
 
 	/**
@@ -172,7 +171,7 @@ class Kernel extends DiBox
 	 */
 	public function run()
 	{
-		$router = $this->get('sys.router', [
+		$router = $this->get('http.router', [
 			config('app.ns_controllers'),
 			config('app.base_uri', '/')
 		]);
@@ -180,7 +179,7 @@ class Kernel extends DiBox
 		try
 		{
 			$aRoute = $router->dispatch();
-			$this->bind('sys.route', $aRoute);
+			$this->bind('http.route', $aRoute);
 			new $aRoute['controller_fqcn']($this);
 		}
 		catch (HttpException $ex)

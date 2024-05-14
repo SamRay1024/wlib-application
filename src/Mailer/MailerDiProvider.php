@@ -34,23 +34,61 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application\Providers;
+namespace wlib\Application\Mailer;
 
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
 
 /**
- * HTTP services provider.
- * 
- * @author Cédric Ducarre
+ * Mail provider.
  */
-class HttpServerDiProvider implements DiBoxProvider
+class MailerDiProvider implements DiBoxProvider
 {
 	public function provide(DiBox $box)
 	{
-		$box->singleton('http.request', \wlib\Http\Server\Request::class);
-		$box->bind('http.response', \wlib\Http\Server\Response::class);
-		$box->singleton('http.session', \wlib\Http\Server\Session::class);
-		$box->singleton('http.cache', \wlib\Application\Cache::class);
+		$box->bind('mailer.mail', function($box, $args)
+		{
+			$mail = new Mail($box, true);
+	
+			switch (config('app.mailer.driver'))
+			{
+				case 'sendmail':
+					$mail->isSendmail();
+					break;
+	
+				case 'smtp':
+					$mail->isSMTP();
+	
+					$mail->Host		= config('app.mailer.host', '');
+
+					// use port 587 for `PHPMailer::ENCRYPTION_STARTTLS`
+					$mail->Port		= (int) config('app.mailer.port', 25);
+					
+					$mail->SMTPAuth	= (config('app.mailer.username', '') != '');
+	
+					if ($mail->SMTPAuth)
+					{
+						$mail->Username = config('app.mailer.username');
+						$mail->Password = config('app.mailer.password', '');
+					}
+	
+					$mail->SMTPSecure = config('app.mailer.encryption', '');
+					break;
+	
+				case 'mail':
+				default:
+					$mail->isMail();
+			}
+
+			$mail->CharSet = config('app.mailer.charset', 'utf-8');
+
+			if (config('app.mailer.from'))
+				$mail->setFrom(config('app.mailer.from'));
+
+			if (config('app.mailer.replyto'))
+				$mail->addReplyTo(config('app.mailer.replyto'));
+	
+			return $mail;
+		});
 	}
 }

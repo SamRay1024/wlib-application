@@ -7,15 +7,16 @@
     "authors": [
         {
             "name": "Cédric Ducarre",
-            "email": "samray1024@gmail.com"
+            "email": "samray1024@ik.me"
         }
     ],
     "require": {
-        "tracy/tracy": "^2.9",
         "wlib/http-server": "^1.0",
         "wlib/dibox": "^1.0",
         "wlib/db": "^1.0",
-        "wlib/i18n": "^1.0"
+        "wlib/i18n": "^1.0",
+        "phpmailer/phpmailer": "^6.9",
+        "tracy/tracy": "^2.9"
     },
     "require-dev": {
         "pestphp/pest": "^2.5"

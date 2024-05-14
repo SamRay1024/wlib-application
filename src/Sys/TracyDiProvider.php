@@ -34,34 +34,59 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application\Providers;
+namespace wlib\Application\Sys;
 
+use wlib\Db\Db;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
-use wlib\I18n\Translator;
 
-class L10nDiProvider implements DiBoxProvider
+class DbPanel implements \Tracy\IBarPanel
+{
+	private $sName;
+	private $db;
+
+	public function __construct($sDbName, Db $db)
+	{
+		$this->sName = $sDbName;
+		$this->db = $db;
+	}
+
+	public function getTab()
+	{
+		return
+			'<span title="Database">'
+				.'<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-database" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6m-8 0a8 3 0 1 0 16 0a8 3 0 1 0 -16 0" /><path d="M4 6v6a8 3 0 0 0 16 0v-6" /><path d="M4 12v6a8 3 0 0 0 16 0v-6" /></svg>'
+				.'<span class="tracy-label">DB:'.$this->sName.':'.$this->db->getQueriesCount().'</span>'
+			.'</span>';
+	}
+
+	public function getPanel()
+	{
+		return '<h1>DB:'. $this->sName .'</h1>
+
+			<div class="tracy-inner">
+			<div class="tracy-inner-container">
+				<pre>'. print_r($this->db, true).'</pre>
+			</div>
+			</div>
+			';
+	}
+}
+
+class TracyDiProvider implements DiBoxProvider
 {
 	public function provide(DiBox $box)
 	{
-		$box->singleton('translator', function($box, $args)
+		$aDb = config('app.databases');
+
+		foreach ($aDb as $sName => $aCfg)
 		{
-			$sLocalesPath = config('app.i18n_path');
-			$sLocale = trim(config('app.i18n_locale', 'en_US'));
-			$translator = new Translator();
+			/** @var \wlib\Db\Db $db */
+			$db = $box['db.'.$sName];
 
-			if ($sLocalesPath && $sLocale)
-			{
-				$box['app.locale'] = $sLocale;
+			$db->saveQueries(!$box['sys.production']);
 
-				$translator->addTranslationsFile(
-					makeCanonical($sLocalesPath)
-						. $sLocale
-						.'.mo'
-				);
-			}
-
-			return $translator;
-		});
+			\Tracy\Debugger::getBar()->addPanel(new DbPanel($sName, $db));
+		}
 	}
 }

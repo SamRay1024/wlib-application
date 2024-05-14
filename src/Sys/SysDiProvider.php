@@ -34,25 +34,53 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application\Providers;
+namespace wlib\Application\Sys;
 
-use Tracy\Debugger;
+use UnexpectedValueException;
+use wlib\Db\Db;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
 
 /**
- * Debugging service provider.
+ * Application main services provider.
  * 
  * @author Cédric Ducarre
  */
-class DebugDiProvider implements DiBoxProvider
+class SysDiProvider implements DiBoxProvider
 {
 	public function provide(DiBox $box)
 	{
-		Debugger::enable(($box['sys.production'] ? Debugger::PRODUCTION : Debugger::DEVELOPMENT));
-		Debugger::$strictMode = true;
-		Debugger::$dumpTheme = 'dark';
-		Debugger::$showLocation = true;
-		Debugger::$logDirectory = config('app.logs_path', '');
+		$box->singleton('http.request', \wlib\Http\Server\Request::class);
+		$box->bind('http.response', \wlib\Http\Server\Response::class);
+		$box->singleton('http.session', \wlib\Http\Server\Session::class);
+		$box->singleton('http.cache', \wlib\Application\Sys\Cache::class);
+
+		$box->bind('http.router', function($box, $args)
+		{
+			return new Router($box['http.request'], $args[0]) /* base URI */;
+		});
+	
+		$aDatabases = config('app.databases');
+
+		if (!is_array($aDatabases))
+			throw new UnexpectedValueException(
+				'Config entry "app.databases" must be an array of connections.'
+			);
+
+		foreach ($aDatabases as $sName => $aConnection)
+		{
+			$box->singleton('db.'.$sName, function($box, $args) use ($aConnection)
+			{
+				return new Db(
+					arrayValue($aConnection, 'driver'),
+					arrayValue($aConnection, 'database'),
+					arrayValue($aConnection, 'username'),
+					arrayValue($aConnection, 'password'),
+					arrayValue($aConnection, 'host'),
+					arrayValue($aConnection, 'port'),
+					arrayValue($aConnection, 'timeout')
+				);
+			});
+		}
 	}
 }

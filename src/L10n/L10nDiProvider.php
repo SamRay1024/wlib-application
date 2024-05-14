@@ -34,82 +34,34 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application\Providers;
+namespace wlib\Application\L10n;
 
-use LogicException;
-use wlib\Application\Auth\BasicAuthProvider;
-use wlib\Application\Auth\KeyAuthProvider;
-use wlib\Application\Auth\PublicAuthProvider;
-use wlib\Application\Auth\UserArrayProvider;
-use wlib\Application\Auth\UserDbProvider;
-use wlib\Application\Auth\WebAuthProvider;
-use wlib\Application\Auth\WebGuard;
-use wlib\Application\Auth\WsseAuthProvider;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
+use wlib\I18n\Translator;
 
-/**
- * Authentication service provider.
- * 
- * @author Cédric Ducarre
- */
-class AuthDiProvider implements DiBoxProvider
+class L10nDiProvider implements DiBoxProvider
 {
 	public function provide(DiBox $box)
 	{
-		$box->singleton('auth.userprovider', function ($box, $args)
+		$box->singleton('translator', function($box, $args)
 		{
-			switch (config('app.users.provider'))
-			{
-				case 'database':
-					return new UserDbProvider($box['db.'. config('app.users.database')]);
+			$sLocalesPath = config('app.i18n_path');
+			$sLocale = trim(config('app.i18n_locale', 'en_US'));
+			$translator = new Translator();
 
-				case 'array':
-					return new UserArrayProvider(config('app.users', []));
+			if ($sLocalesPath && $sLocale)
+			{
+				$box['app.locale'] = $sLocale;
+
+				$translator->addTranslationsFile(
+					makeCanonical($sLocalesPath)
+						. $sLocale
+						.'.mo'
+				);
 			}
 
-			throw new LogicException(
-				'Unknown "app.users.provider" config. '
-				.'Please choose a value among : "database", "array".'
-			);
-		});
-
-		$box->singleton('auth.public', function ($box, $args)
-		{
-			return new PublicAuthProvider($box['http.request']);
-		});
-
-		$box->singleton('auth.basic', function ($box, $args)
-		{
-			return new BasicAuthProvider($box['http.request'], $box['auth.userprovider']);
-		});
-
-		$box->singleton('auth.key', function ($box, $args)
-		{
-			return new KeyAuthProvider($box['http.request'], $box['auth.userprovider']);
-		});
-
-		$box->singleton('auth.wsse', function ($box, $args)
-		{
-			return new WsseAuthProvider(
-				$box['http.request'],
-				$box['auth.userprovider'],
-				config('app.nonces_path')
-			);
-		});
-
-		$box->singleton('auth.web', function ($box, $args)
-		{
-			return new WebAuthProvider($box['guard.web']);
-		});
-
-		$box->singleton('guard.web', function ($box, $args)
-		{
-			return new WebGuard(
-				$box,
-				$box['http.session'],
-				$box['auth.userprovider']
-			);
+			return $translator;
 		});
 	}
 }

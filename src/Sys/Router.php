@@ -34,7 +34,7 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application;
+namespace wlib\Application\Sys;
 
 use wlib\Http\Server\HttpException;
 use wlib\Http\Server\Request;

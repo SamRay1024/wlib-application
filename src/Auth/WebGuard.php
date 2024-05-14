@@ -39,7 +39,7 @@ namespace wlib\Application\Auth;
 use LogicException;
 use RuntimeException;
 use UnexpectedValueException;
-use wlib\Application\Kernel;
+use wlib\Application\Sys\Kernel;
 use wlib\Application\Models\User;
 use wlib\Http\Server\Session;
 

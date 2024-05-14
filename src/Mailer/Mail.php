@@ -34,29 +34,34 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application\Providers;
+namespace wlib\Application\Mailer;
 
-use wlib\Application\Templates\Engine;
+use LogicException;
+use PHPMailer\PHPMailer\PHPMailer;
 use wlib\Di\DiBox;
-use wlib\Di\DiBoxProvider;
 
-/**
- * Template engine provider.
- * 
- * @author Cédric Ducarre
- */
-class TemplateEngineDiProvider implements DiBoxProvider
+class Mail extends PHPMailer
 {
-	public function provide(DiBox $box)
-	{
-		$box->bind('app.templates', function($box, $args)
-		{
-		$engine = new Engine(/* W_ROOT .'resources'. DS .'templates' */);
-			$engine
-				->addSrcPath(rtrim(config('app.templates_path'), '/'))
-				->setFileExtension(config('app.templates_ext', '.html.php'));
+	private DiBox $app;
 
-			return $engine;
-		});
+	public function __construct(DiBox $app, $exceptions = null)
+	{
+		parent::__construct($exceptions);
+
+		$this->app = $app;
+	}
+
+	public function setTemplateBody($sTplFile, $aData = [])
+	{
+		$this->isHTML(true);
+		
+		$aData['appname'] = config('app.name');
+		$aData['lang'] = $this->app['app.locale'];
+		$aData['mail'] = &$this;
+
+		$this->Body = $this->app['app.templates']->render($sTplFile, $aData);
+
+		if ($this->Subject == '')
+			throw new LogicException('Please define the mail subject.');
 	}
 }

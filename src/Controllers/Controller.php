@@ -40,8 +40,8 @@ use RuntimeException;
 use wlib\Application\Auth\AuthenticateException;
 use wlib\Application\Auth\IAuthProvider;
 use wlib\Application\Auth\IUser;
-use wlib\Application\Cache;
-use wlib\Application\Kernel;
+use wlib\Application\Sys\Cache;
+use wlib\Application\Sys\Kernel;
 use wlib\Db\Db;
 use wlib\Http\Server\HttpException;
 use wlib\Http\Server\Request;
@@ -131,7 +131,7 @@ abstract class Controller
 		if ($this->app->has('db.default'))
 			$this->db = $this->app['db.default'];
 
-		$this->aArgs = $this->app['sys.route']['args'];
+		$this->aArgs = $this->app['http.route']['args'];
 
 		$this->initialize();
 		$this->authenticate();
