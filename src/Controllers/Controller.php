@@ -568,7 +568,7 @@ abstract class Controller
 	 */
 	protected function pathUri()
 	{
-		return $this->app['sys.route']['routed_path'];
+		return $this->app['http.route']['routed_path'];
 	}
 	
 	/**
