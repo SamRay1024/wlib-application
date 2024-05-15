@@ -161,7 +161,7 @@ class WebGuard
 			|| !$user->canLogin()
 		)
 			throw new AuthenticateException(
-				__('Access denied, please check your credentials.')
+				'Unable to connect user : check credentials or login authorization.'
 			);
 
 		unset($user->password);
@@ -216,7 +216,7 @@ class WebGuard
 	{
 		if (filter_var($sUserEmail, FILTER_VALIDATE_EMAIL) === false)
 			throw new UnexpectedValueException(
-				__('You have to provide an email address to register.')
+				'`$sUserEmail` is not a valid email address.'
 			);
 
 		$sToken = md5(uniqid());
@@ -225,9 +225,7 @@ class WebGuard
 		$dbuser = $this->app->getTable(User::class);
 		
 		if ($dbuser->isAccountActive($sUserEmail))
-			throw new RuntimeException(
-				__('This email address is already registered.')
-			);
+			throw new RuntimeException('`$sUserEmail` address already exits.');
 
 		$dbuser->save(
 			['name' => '» new «', 'email' => $sUserEmail, 'token' => $sToken],
@@ -306,7 +304,7 @@ class WebGuard
 	{
 		if (filter_var($sUserEmail, FILTER_VALIDATE_EMAIL) === false)
 			throw new UnexpectedValueException(
-				__('You have to provide an email address to renew your password.')
+				'`$sUserEmail` is not a valid email address.'
 			);
 
 		/** @var \wlib\Application\Models\User $dbuser */
