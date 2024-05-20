@@ -55,6 +55,11 @@ class L10nDiProvider implements DiBoxProvider
 				$box['app.locale'] = $sLocale;
 
 				$translator->addTranslationsFile(
+					W_ROOT .'resources/locales/'. $sLocale .'.mo',
+					W_L10N_DOMAIN
+				);
+
+				$translator->addTranslationsFile(
 					makeCanonical($sLocalesPath)
 						. $sLocale
 						.'.mo'

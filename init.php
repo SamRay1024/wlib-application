@@ -45,3 +45,4 @@ define('CR', chr(13));
 define('LF', chr(10));
 define('CRLF', CR . LF);
 define('W_ROOT', dirname(__FILE__) . DS);
+define('W_L10N_DOMAIN', 'wapp');
