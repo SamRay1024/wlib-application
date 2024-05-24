@@ -287,9 +287,9 @@ abstract class Controller
 	 */
 	protected function checkFlooding()
 	{
-		$iSeconds = abs($this->limit());
+		$iMilliseconds = abs($this->limit());
 
-		if ($iSeconds <= 0)
+		if ($iMilliseconds <= 0)
 			return;
 
 		if (!session_id())
@@ -300,13 +300,13 @@ abstract class Controller
 			.'.'. $this->sUid
 		;
 		
-		$iLastHit = (int) session($sSessionKey);
-		session([$sSessionKey => time()]);
+		$iLastHit = session($sSessionKey);
+		session([$sSessionKey => intval(microtime(true) * 1000)]);
 
-		if ((time() - $iLastHit) < $iSeconds)
+		if ((intval(microtime(true) * 1000) - $iLastHit) < $iMilliseconds)
 			$this->haltTooManyRequests(
-				'You have to wait '. $iSeconds .' seconds between two requests.',
-				['Retry-After: '. $iSeconds]
+				'You have to wait '. $iMilliseconds .' milliseconds between two requests.',
+				['Retry-After: '. (int) (round($iMilliseconds / 1000) ?: 1)]
 			);
 	}
 
