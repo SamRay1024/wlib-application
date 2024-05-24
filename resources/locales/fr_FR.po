@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wlib/application\n"
-"POT-Creation-Date: 2024-05-19 15:41+0200\n"
-"PO-Revision-Date: 2024-05-19 15:41+0200\n"
+"POT-Creation-Date: 2024-05-24 19:31+0200\n"
+"PO-Revision-Date: 2024-05-24 19:31+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -25,8 +25,7 @@ msgstr "Confirmez votre inscription"
 #: resources/templates/mails/auth/confirm-email.html.php:4
 msgid "Verify your email to finalize your account creation"
 msgstr ""
-"Vérifiez votre courrier électronique pour finaliser la création de votre "
-"compte"
+"Vérifiez votre adresse de courriel pour finaliser la création de votre compte"
 
 #: resources/templates/mails/auth/confirm-email.html.php:13
 msgid "To finalize your account creation, please click on the button below."
@@ -56,8 +55,8 @@ msgid "This mail confirms your password update."
 msgstr "Ce courriel confirme la mise à jour de votre mot de passe."
 
 #: resources/templates/mails/auth/password-updated.html.php:14
-msgid "The password of your FeedStack account has been updated."
-msgstr "Le mot de passe de votre compte FeedStack a été mis à jour."
+msgid "The password of your user account has been updated."
+msgstr "Le mot de passe de votre compte utilisateur a été mis à jour."
 
 #: resources/templates/mails/auth/password-updated.html.php:15
 msgid ""
@@ -86,11 +85,11 @@ msgstr "Se connecter"
 
 #: resources/templates/mails/auth/renew-password.html.php:3
 msgid "Password renewal confirmation"
-msgstr "Vérification du mot de passe"
+msgstr "Confirmation de renouvellement de mot de passe"
 
 #: resources/templates/mails/auth/renew-password.html.php:4
 msgid "This is the validation email to renew your password."
-msgstr "A link to the renew password form will be send to you."
+msgstr "Ceci est le courriel de validation pour renouveler votre mot de passe."
 
 #: resources/templates/mails/auth/renew-password.html.php:12
 msgid "Renew your password"
@@ -118,7 +117,7 @@ msgstr "Renouveler mon mot de passe"
 msgid "Access denied, please check your credentials or contact support."
 msgstr ""
 "Accès refusé, veuillez vérifier vos informations d'identification ou "
-"contactez le support."
+"contacter le support."
 
 #: src/Auth/WebGuard.php:219
 msgid "You have to provide an email address to register."
@@ -146,6 +145,18 @@ msgstr ""
 "Vous devez renseigner une adresse de courriel valide pour renouveler votre "
 "mot de passe."
 
+#: src/Auth/WebGuard.php:359
+msgid "Password renewal failed : user not found."
+msgstr "Echec du renouvellement de mot de passe : utilisateur introuvable."
+
+#: src/Auth/WebGuard.php:364
+msgid "Please fill in your new password."
+msgstr "Veuillez saisir votre nouveau mot de passe."
+
+#: src/Controllers/Controller.php:603
+msgid "Invalid form, please try again."
+msgstr "Formulaire invalide, veuillez recommencer."
+
 #~ msgid "Password verification mismatch."
 #~ msgstr "La vérification du mot de passe ne correspond pas."
 
@@ -157,9 +168,6 @@ msgstr ""
 
 #~ msgid "Action not allowed."
 #~ msgstr "Action non autorisée."
-
-#~ msgid "Password renewal failed : user not found."
-#~ msgstr "Echec du renouvellement de mot de passe : utilisateur introuvable."
 
 #~ msgid "Password renewal failed : please restart the procedure."
 #~ msgstr ""
@@ -287,9 +295,6 @@ msgstr ""
 
 #~ msgid "Update password"
 #~ msgstr "Mettre à jour le mot passe"
-
-#~ msgid "Invalid form, please try again."
-#~ msgstr "Formulaire invalide, veuillez recommencer."
 
 #~ msgid "This is an automated email sent from <strong>FeedStack</strong>."
 #~ msgstr ""

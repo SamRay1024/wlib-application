@@ -11,7 +11,7 @@ require dirname(dirname(__FILE__)) . '/header.html.php';
 	<td style="padding-bottom: 15px; font-family: arial, sans-serif; font-size: 15px; line-height: 21px; color: #3C3F44; text-align: left;">
 
 		<h1 style="<?= $s_h1 ?>"><?= __('Your password has been updated', W_L10N_DOMAIN) ?></h1>
-		<p style="<?= $s_p ?>">✅ <?= __('The password of your FeedStack account has been updated.', W_L10N_DOMAIN) ?></p>
+		<p style="<?= $s_p ?>">✅ <?= __('The password of your user account has been updated.', W_L10N_DOMAIN) ?></p>
 		<p style="<?= $s_p ?>"><?= __('If you did not initiate this request to renew your password, make sure :', W_L10N_DOMAIN) ?></p>
 		<ul style="<? $s_ul ?>">
 			<li style="<?= $s_li ?>"><?= __('To <strong>secure your boxmail</strong> by setting a new password,', W_L10N_DOMAIN) ?></li>
