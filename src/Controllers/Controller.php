@@ -576,12 +576,11 @@ abstract class Controller
 	 *
 	 * Don't forget to clean the token when your form handling is over.
 	 * 
-	 * @param string $sTokenName Token identifier.
 	 * @return string
 	 */
-	protected function getCsrfToken(string $sTokenName): string
+	protected function getFormToken(): string
 	{
-		return $this->session->getToken($sTokenName);
+		return $this->session->getToken($this->request->getRequestUri());
 	}
 
 	/**
@@ -591,13 +590,18 @@ abstract class Controller
 	 * @param string $sFieldName Field name in witch token value has been put.
 	 * @throw HttpException if token no set or invalid.
 	 */
-	protected function checkCsrfToken(string $sTokenName, string $sFieldName = '_token')
+	protected function checkFormToken(string $sFieldName = '_token')
 	{
+		$sTokenName = $this->request->getRequestUri();
+
 		if (
 			!$this->hasData($sFieldName)
 			|| !$this->session->isValidToken($sTokenName, $this->data($sFieldName))
 		)
-			throw new HttpException(Response::HTTP_METHOD_NOT_ALLOWED);
+			throw new HttpException(
+				Response::HTTP_METHOD_NOT_ALLOWED,
+				__('Invalid form, please try again.')
+			);
 
 		$this->session->removeToken($sTokenName);
 	}
