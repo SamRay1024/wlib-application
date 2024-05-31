@@ -36,7 +36,6 @@
 
 namespace wlib\Application\Auth;
 
-use LogicException;
 use RuntimeException;
 use UnexpectedValueException;
 use wlib\Application\Sys\Kernel;
@@ -135,9 +134,9 @@ class WebGuard
 		$this->sLoginUrl	= config('app.guard.web.login_url', '/auth/login');
 		$this->sLogoutUrl	= config('app.guard.web.logout_url', '/auth/logout');
 		$this->sRegisterUrl	= config('app.guard.web.register_url', '/auth/register');
-		$this->sVerifyUrl	= config('app.guard.web.verify_url', '/auth/verify');
+		$this->sVerifyUrl	= config('app.guard.web.verify_url', '/auth/verify?k=%s');
 		$this->sForgotUrl	= config('app.guard.web.forgot_url', '/auth/forgot');
-		$this->sRenewUrl	= config('app.guard.web.renew_url', '/auth/renew');
+		$this->sRenewUrl	= config('app.guard.web.renew_url', '/auth/renew?k=%s');
 
 		if (!$this->session->isStarted())
 			$this->session->start();
@@ -238,7 +237,7 @@ class WebGuard
 
 		$mail->addAddress($sUserEmail);
 		$mail->setTemplateBody('mails/auth/confirm-email', [
-			'confirmurl' => '//'. config('app.base_url') . $this->getVerifyUrl() .'?vk='. urlencode($sToken)
+			'confirmurl' => '//'. config('app.base_url') . $this->getVerifyUrl($sToken)
 		]);
 		
 		$mail->send();
@@ -334,7 +333,7 @@ class WebGuard
 
 			$mail->addAddress($sUserEmail);
 			$mail->setTemplateBody('mails/auth/renew-password', [
-				'renewurl' => '//'. config('app.base_url') . $this->getRenewUrl() .'?rk='. urlencode($sToken)
+				'renewurl' => '//'. config('app.base_url') . $this->getRenewUrl($sToken)
 			]);
 			$mail->send();
 		}
@@ -423,11 +422,12 @@ class WebGuard
 	/**
 	 * Get the verifying email address URL.
 	 *
+	 * @param string $sKey Verify key.
 	 * @return string
 	 */
-	public function getVerifyUrl(): string
+	public function getVerifyUrl(string $sKey): string
 	{
-		return $this->sVerifyUrl;
+		return sprintf($this->sVerifyUrl, urlencode($sKey));
 	}
 	
 	/**
@@ -443,11 +443,12 @@ class WebGuard
 	/**
 	 * Get the renewal password form URL.
 	 *
+	 * @param string $sKey Renew key.
 	 * @return string
 	 */
-	public function getRenewUrl(): string
+	public function getRenewUrl(string $sKey): string
 	{
-		return $this->sRenewUrl;
+		return sprintf($this->sRenewUrl, urlencode($sKey));;
 	}
 
 	// TODO : add a method to delete unterminated registrations
