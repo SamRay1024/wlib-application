@@ -115,21 +115,21 @@ class Engine
 
 		foreach ($this->aSrcPath as $sSrcPath)
 		{
-			$sTplFile = $sSrcPath .'/'. ltrim($sTplFile, '/') . $this->sFileExt;
+			$sTplFileFull = $sSrcPath .'/'. ltrim($sTplFile, '/') . $this->sFileExt;
 
-			if (file_exists($sTplFile))
+			if (file_exists($sTplFileFull))
 			{
 				extract($aData);
 
 				ob_start();
-				include $sTplFile;
+				include $sTplFileFull;
 				return ob_get_clean();
 			}
 		}
 		
 		throw new \LogicException(sprintf(
 			'Template file "%s" not found.',
-			$sTplFile
+			$sTplFileFull
 		));
 	}
 }
