@@ -60,9 +60,7 @@ class L10nDiProvider implements DiBoxProvider
 				);
 
 				$translator->addTranslationsFile(
-					makeCanonical($sLocalesPath)
-						. $sLocale
-						.'.mo'
+					makeCanonical($sLocalesPath) . $sLocale .'.mo'
 				);
 			}
 

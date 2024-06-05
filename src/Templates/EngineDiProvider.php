@@ -50,8 +50,9 @@ class EngineDiProvider implements DiBoxProvider
 	{
 		$box->bind('app.templates', function($box, $args)
 		{
-			$engine = new Engine(/* W_ROOT .'resources'. DS .'templates' */);
+			$engine = new Engine();
 			$engine
+				->addSrcPath(W_ROOT .'resources'. DS .'templates')
 				->addSrcPath(rtrim(config('app.templates_path'), '/'))
 				->setFileExtension(config('app.templates_ext', '.html.php'));
 
