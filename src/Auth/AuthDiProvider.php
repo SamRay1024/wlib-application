@@ -57,7 +57,7 @@ class AuthDiProvider implements DiBoxProvider
 					return new UserDbProvider($box['db.'. config('app.users.database')]);
 
 				case 'array':
-					return new UserArrayProvider(config('app.users', []));
+					return new UserArrayProvider(config('app.users.array', []));
 			}
 
 			throw new LogicException(
