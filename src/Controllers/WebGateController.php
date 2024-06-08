@@ -47,38 +47,25 @@ use wlib\Http\Server\Session;
 /**
  * Web user identification controller proposal.
  * 
- * It's a controller which uses the WebGuard to identify users on your application.
+ * This controller is a gate where users are redirected to identify. This gate
+ * uses the WebGuard to identify users on your application.
  * 
  * You can use it as is or create your own.
  * 
  * @author Cédric Ducarre
  */
-abstract class AuthWebController extends FrontController
+class WebGateController extends FrontController
 {
-	/**
-	 * Guard of web authentication.
-	 * @var \wlib\Application\Auth\WebGuard
-	 */
 	private WebGuard $guard;
 
-	/**
-	 * List of allowed routes for this controller.
-	 * @var array
-	 */
 	protected array $aAllowedRoutes = [
 		'login', 'logout', 'register', 'verify', 'forgot', 'renew'
 	];
-	
-	/**
-	 * Rate limiter to this controller.
-	 *
-	 * @return int
-	 */
-	public function limit(): int { return 200; }
-	
-	/**
-	 * Controller construct.
-	 */
+
+	protected array $aStylesheets = [];
+
+	public function limit(): int { return ($this->isPost() ? 200 : 0); }
+
 	public function initialize()
 	{
 		parent::initialize();
@@ -86,12 +73,12 @@ abstract class AuthWebController extends FrontController
 		$this->guard = $this->app['guard.web'];
 	}
 
-	/**
-	 * Startup.
-	 */
 	public function start()
 	{
 		$sAuthRoute = $this->arg(0);
+
+		if ($sAuthRoute == '')
+			$this->redirectPermanent($this->guard->getLoginUrl());
 
 		if (!in_array($sAuthRoute, $this->aAllowedRoutes) ||
 			!method_exists($this, $sAuthRoute))
@@ -101,17 +88,6 @@ abstract class AuthWebController extends FrontController
 		$this->$sAuthRoute();
 	}
 
-	/**
-	 * Render the given screen.
-	 * 
-	 * If you want to overwrite the default file template, you have to duplicate
-	 * the file "resources/templates/auth.html.php" in your application.
-	 * 
-	 * The current screen will be `$screen` template variable.
-	 * 
-	 * @param string $sScreen Screen to render.
-	 * @param array $aVars Variables passed to template.
-	 */
 	private function renderScreen(string $sScreen, array $aVars = [])
 	{
 		$aVars['screen'] = $sScreen;
@@ -119,25 +95,12 @@ abstract class AuthWebController extends FrontController
 
 		$this->response->html($this->render('auth', $aVars));	
 	}
-	
-	/**
-	 * Define the stylesheets links to use with the auth template file.
-	 *
-	 * Each link is an array of two items to define the <link> attributes :
-	 * 
-	 * - "href", mandatory
-	 * - "media", optional, "screen" if not defined
-	 * 
-	 * @return array
-	 */
+
 	protected function stylesheets(): array
 	{
 		return [];
 	}
-	
-	/**
-	 * Login route.
-	 */
+
 	protected function login()
 	{
 		if ($this->isPost()
@@ -172,16 +135,15 @@ abstract class AuthWebController extends FrontController
 		$aSuccess = $this->session->flash('success');
 
 		$this->renderScreen('login', [
-			'error'		=> access($aError, 'message', ''),
-			'success'	=> access($aSuccess, 'message', ''),
-			'username'	=> access($aError, 'data.username', ''),
-			'token'		=> $this->getFormToken()
+			'error'				=> access($aError, 'message', ''),
+			'success'			=> access($aSuccess, 'message', ''),
+			'username'			=> access($aError, 'data.username', ''),
+			'token'				=> $this->getFormToken(),
+			'can_update_users'	=> $this->guard->canUpdateUsers(),
+			'can_register'		=> $this->guard->canRegister()
 		]);
 	}
-	
-	/**
-	 * Logout route.
-	 */
+
 	protected function logout()
 	{
 		$this->guard->logout();
@@ -190,12 +152,12 @@ abstract class AuthWebController extends FrontController
 			$this->param('redirect_to', $this->guard->getLoginUrl())
 		);
 	}
-	
-	/**
-	 * Register route.
-	 */
+
 	public function register()
 	{
+		if (!$this->guard->canRegister())
+			$this->redirectPermanent($this->guard->getLoginUrl());
+
 		if ($this->isPost() && $this->hasData('email'))
 		{
 			try
@@ -228,12 +190,12 @@ abstract class AuthWebController extends FrontController
 			]
 		);
 	}
-	
-	/**
-	 * Verify email route.
-	 */
+
 	public function verify()
 	{
+		if (!$this->guard->canRegister())
+			$this->redirectPermanent($this->guard->getLoginUrl());
+
 		try
 		{
 			if (!$this->hasParam('k'))
@@ -287,12 +249,12 @@ abstract class AuthWebController extends FrontController
 			'name'		=> access($aError, 'data.name', '')
 		]);
 	}
-	
-	/**
-	 * Forgot password route.
-	 */
+
 	public function forgot()
 	{
+		if (!$this->guard->canUpdateUsers())
+			$this->redirectPermanent($this->guard->getLoginUrl());
+
 		if ($this->isPost() && $this->hasData('email'))
 		{
 			try
@@ -319,12 +281,12 @@ abstract class AuthWebController extends FrontController
 			]
 		);
 	}
-	
-	/**
-	 * Renew password route.
-	 */
+
 	public function renew()
 	{
+		if (!$this->guard->canUpdateUsers())
+			$this->redirectPermanent($this->guard->getLoginUrl());
+
 		try
 		{
 			if (!$this->hasParam('k'))
