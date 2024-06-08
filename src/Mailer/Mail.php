@@ -40,18 +40,36 @@ use LogicException;
 use PHPMailer\PHPMailer\PHPMailer;
 use wlib\Di\DiBox;
 
+/**
+ * Build a mail from a template file and send it.
+ * 
+ * @author Cédric Ducarre
+ */
 class Mail extends PHPMailer
 {
 	private DiBox $app;
-
+		
+	/**
+	 * Initialize PHPMailer and get the dependencies container.
+	 *
+	 * @param \wlib\Di\DiBox $app Current application.
+	 * @param bool $exceptions `true` to tell PHPMailer to throw exceptions.
+	 */
 	public function __construct(DiBox $app, $exceptions = null)
 	{
 		parent::__construct($exceptions);
 
 		$this->app = $app;
 	}
-
-	public function setTemplateBody($sTplFile, $aData = [])
+	
+	/**
+	 * Define a template body from file.
+	 *
+	 * @param string $sTplFile Path of mail template file.
+	 * @param array $aData Template data.
+	 * @throws LogicException if the template file don't define the mail subject.
+	 */
+	public function setTemplateBody(string $sTplFile, array $aData = [])
 	{
 		$this->isHTML(true);
 		
