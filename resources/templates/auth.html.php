@@ -42,8 +42,7 @@
 
 		<form method="post" class="pal">
 
-			<?php // ==== LOGIN SCREEN ====================================== 
-			?>
+			<?php // ==== LOGIN SCREEN ====================================== ?>
 			<?php if ($screen == 'login') : ?>
 
 				<div class="wfield">
@@ -63,14 +62,19 @@
 				<div class="wfield">
 					<button type="submit" class="wbtn-primary w100 mtm big"><?= __('Connect') ?></button>
 				</div>
+				
+				<?php if ($can_update_users) : ?>
 				<div class="wfield small tce">
-					<a href="register"><?= __('Register') ?></a> • <a href="forgot"><?= __('Forgot password ?') ?></a>
+					<?php if ($can_register) : ?>
+					<a href="register"><?= __('Register') ?></a> • 
+					<?php endif; ?>
+					<a href="forgot"><?= __('Forgot password ?') ?></a>
 				</div>
+				<?php endif; ?>
 
 			<?php endif; /* login */ ?>
 
-			<?php // ==== REGISTER START SCREEN ============================= 
-			?>
+			<?php // ==== REGISTER START SCREEN ============================= ?>
 			<?php if ($screen == 'register') : ?>
 
 				<h3><?= __('Register your email address') ?></h3>
@@ -95,8 +99,7 @@
 
 			<?php endif; /* register */ ?>
 
-			<?php // ==== REGISTER WAITING SCREEN =========================== 
-			?>
+			<?php // ==== REGISTER WAITING SCREEN =========================== ?>
 			<?php if ($screen == 'register-waiting') : ?>
 
 				<h3><?= __('Thanks for your interest !') ?></h3>
@@ -105,8 +108,7 @@
 
 			<?php endif; /* register-waiting */ ?>
 
-			<?php // ==== VERIFY SCREEN ===================================== 
-			?>
+			<?php // ==== VERIFY SCREEN ===================================== ?>
 			<?php if ($screen == 'verify') : ?>
 				<h3><?= __('You\'re almost done !'); ?></h3>
 
@@ -138,8 +140,7 @@
 				</div>
 			<?php endif; /* verify */ ?>
 
-			<?php // ==== FORGOT PWD SCREEN ================================= 
-			?>
+			<?php // ==== FORGOT PWD SCREEN ================================= ?>
 			<?php if ($screen == 'forgot') : ?>
 
 				<h3><?= __('Don\'t remember your password ?') ?></h3>
@@ -164,8 +165,7 @@
 
 			<?php endif; /* forgot */ ?>
 
-			<?php // ==== FORGOT WAITING SCREEN ============================= 
-			?>
+			<?php // ==== FORGOT WAITING SCREEN ============================= ?>
 			<?php if ($screen == 'forgot-waiting') : ?>
 
 				<h3><?= __('Password renewal in progress') ?></h3>
@@ -174,8 +174,7 @@
 
 			<?php endif; /* forgot-waiting */ ?>
 
-			<?php // ==== RENEW PASSWORD SCREEN ============================= 
-			?>
+			<?php // ==== RENEW PASSWORD SCREEN ============================= ?>
 			<?php if ($screen == 'renew') : ?>
 				<h3><?= __('Renew your password'); ?></h3>
 

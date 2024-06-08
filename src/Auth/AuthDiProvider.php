@@ -37,6 +37,7 @@
 namespace wlib\Application\Auth;
 
 use LogicException;
+use wlib\Application\Crypto\HashManager;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
 
@@ -49,19 +50,23 @@ class AuthDiProvider implements DiBoxProvider
 {
 	public function provide(DiBox $box)
 	{
-		$box->singleton('auth.userprovider', function ($box, $args)
+		$box->singleton('auth.userprovider', function (DiBox $box, $args)
 		{
-			switch (config('app.users.provider'))
+			switch (config('app.security.user_provider'))
 			{
 				case 'database':
-					return new UserDbProvider($box['db.'. config('app.users.database')]);
+					return new UserDbProvider(
+						$box['db.'. config('app.security.database.name')]
+					);
 
 				case 'array':
-					return new UserArrayProvider(config('app.users.array', []));
+					return new UserArrayProvider(
+						config('app.security.array.users', [])
+					);
 			}
 
 			throw new LogicException(
-				'Unknown "app.users.provider" config. '
+				'Unknown "app.security.user_provider" config. '
 				.'Please choose a value among : "database", "array".'
 			);
 		});
@@ -73,12 +78,18 @@ class AuthDiProvider implements DiBoxProvider
 
 		$box->singleton('auth.basic', function ($box, $args)
 		{
-			return new BasicAuthProvider($box['http.request'], $box['auth.userprovider']);
+			return new BasicAuthProvider(
+				$box['http.request'],
+				$box['auth.userprovider']
+			);
 		});
 
 		$box->singleton('auth.key', function ($box, $args)
 		{
-			return new KeyAuthProvider($box['http.request'], $box['auth.userprovider']);
+			return new KeyAuthProvider(
+				$box['http.request'],
+				$box['auth.userprovider']
+			);
 		});
 
 		$box->singleton('auth.wsse', function ($box, $args)
@@ -97,10 +108,16 @@ class AuthDiProvider implements DiBoxProvider
 
 		$box->singleton('guard.web', function ($box, $args)
 		{
+			$sUserProvider = config('app.security.user_provider');
+
 			return new WebGuard(
 				$box,
 				$box['http.session'],
-				$box['auth.userprovider']
+				$box['auth.userprovider'],
+				$box->get('hash.manager', [
+					config("app.security.$sUserProvider.hash_algo", HashManager::ALGO_BCRYPT),
+					config("app.security.$sUserProvider.hash_options", [])
+				])
 			);
 		});
 	}

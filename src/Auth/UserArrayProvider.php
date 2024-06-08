@@ -36,6 +36,8 @@
 
 namespace wlib\Application\Auth;
 
+use wlib\Application\Crypto\IHashDriver;
+
 /**
  * User provider by array.
  *
@@ -47,7 +49,17 @@ class UserArrayProvider implements IUserProvider
 	 * Users list.
 	 * @var array
 	 */
-	private $aUsersList = [];
+	private array $aUsersList = [];
+
+	/**
+	 * Users can't register or update password with this provider.
+	 * 
+	 * @return false
+	 */
+	public function writeable(): bool
+	{
+		return false;
+	}
 
 	/**
 	 * Set the users list.
@@ -71,7 +83,7 @@ class UserArrayProvider implements IUserProvider
 	 */
 	public function getById(mixed $mId): ?IUser
 	{
-		return $this->getByKey($mId);
+		return $this->getByUsername($mId);
 	}
 
 	/**
@@ -82,18 +94,7 @@ class UserArrayProvider implements IUserProvider
 	 */
 	public function getByKey(string $sKey): ?IUser
 	{
-		$sUsername = array_search($sKey, $this->aUsersList, true);
-
-		if (!$sUsername)
-			return null;
-
-		return new User([
-			'id'        => $sKey,
-			'key'       => $sKey,
-			'username'  => $sUsername,
-			'password'  => $sKey,
-			'can_login' => '1',
-		]);
+		return $this->getByUsername($sKey);
 	}
 
 	/**
@@ -111,8 +112,8 @@ class UserArrayProvider implements IUserProvider
 			'id'        => $sUsername,
 			'key'       => $sUsername,
 			'username'  => $sUsername,
-			'password'  => $this->aUsersList[$sUsername],
-			'can_login' => '1',
+			'password'  => access($this->aUsersList, $sUsername.'.password', ''),
+			'can_login' => access($this->aUsersList, $sUsername.'.can_login', true),
 		]);
 	}
 }

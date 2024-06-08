@@ -150,6 +150,8 @@ class Kernel extends DiBox
 		$this->register(SysDiProvider::class);
 		$this->register(\wlib\Application\Templates\EngineDiProvider::class);
 		$this->register(\wlib\Application\Auth\AuthDiProvider::class);
+		$this->register(\wlib\Application\Mailer\MailerDiProvider::class);
+		$this->register(\wlib\Application\Crypto\HashDiProvider::class);
 	}
 
 	/**

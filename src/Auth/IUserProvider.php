@@ -66,4 +66,14 @@ interface IUserProvider
 	 * @return IUser
 	 */
 	public function getByUsername(string $sUsername): ?IUser;
+
+	/**
+	 * Return if the user provider accepts users modifications.
+	 * 
+	 * Example : with UserArrayProvider, users can't register or update password
+	 * themselves.
+	 * 
+	 * @return bool
+	 */
+	public function writeable(): bool;
 }

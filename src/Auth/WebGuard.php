@@ -38,6 +38,7 @@ namespace wlib\Application\Auth;
 
 use RuntimeException;
 use UnexpectedValueException;
+use wlib\Application\Crypto\IHashDriver;
 use wlib\Application\Sys\Kernel;
 use wlib\Application\Models\User;
 use wlib\Http\Server\Session;
@@ -83,6 +84,12 @@ class WebGuard
 	private IUserProvider $users;
 
 	/**
+	 * Hash manager.
+	 * @var \wlib\Application\Crypto\IHashDriver
+	 */
+	private IHashDriver $hmngr;
+
+	/**
 	 * Login URL.
 	 * @var string
 	 */
@@ -124,24 +131,50 @@ class WebGuard
 	 * @param \wlib\Application\Kernel $app Current application instance.
 	 * @param \wlib\Http\Server\Session $session Current session.
 	 * @param \wlib\Application\Auth\IUserProvider $users Users provider.
+	 * @param \wlib\Application\Crypto\IHashDriver $hmngr Hash manager.
 	 */
-	public function __construct(Kernel $app, Session $session, IUserProvider $users)
+	public function __construct(Kernel $app, Session $session, IUserProvider $users, IHashDriver $hmngr)
 	{
 		$this->app = $app;
 		$this->session = $session;
 		$this->users = $users;
+		$this->hmngr = $hmngr;
 
-		$this->sLoginUrl	= config('app.guard.web.login_url', '/auth/login');
-		$this->sLogoutUrl	= config('app.guard.web.logout_url', '/auth/logout');
-		$this->sRegisterUrl	= config('app.guard.web.register_url', '/auth/register');
-		$this->sVerifyUrl	= config('app.guard.web.verify_url', '/auth/verify?k=%s');
-		$this->sForgotUrl	= config('app.guard.web.forgot_url', '/auth/forgot');
-		$this->sRenewUrl	= config('app.guard.web.renew_url', '/auth/renew?k=%s');
+		$this->sLoginUrl	= config('app.security.guard.web.login_url', '/auth/login');
+		$this->sLogoutUrl	= config('app.security.guard.web.logout_url', '/auth/logout');
+		$this->sRegisterUrl	= config('app.security.guard.web.register_url', '/auth/register');
+		$this->sVerifyUrl	= config('app.security.guard.web.verify_url', '/auth/verify?k=%s');
+		$this->sForgotUrl	= config('app.security.guard.web.forgot_url', '/auth/forgot');
+		$this->sRenewUrl	= config('app.security.guard.web.renew_url', '/auth/renew?k=%s');
 
 		if (!$this->session->isStarted())
 			$this->session->start();
 	}
-	
+		
+	/**
+	 * Check wether the user provider allows user updates.
+	 *
+	 * @return bool
+	 */
+	public function canUpdateUsers(): bool
+	{
+		return $this->users->writeable();
+	}
+
+	/**
+	 * Check wether users can register.
+	 * 
+	 * The user provider must allows updates.
+	 * 
+	 * @return bool
+	 */
+	public function canRegister(): bool
+	{
+		return 
+			$this->canUpdateUsers()
+			&& config('app.security.guard.web.can_register', true);
+	}
+
 	/**
 	 * Log in an user.
 	 *
@@ -156,7 +189,7 @@ class WebGuard
 
 		if (
 			is_null($user)
-			|| !password_verify($sPassword, $user->getPassword())
+			|| !$this->hmngr->check($sPassword, $user->getPassword())
 			|| !$user->canLogin()
 		)
 			throw new AuthenticateException(

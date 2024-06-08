@@ -114,7 +114,7 @@ class User implements IUser
 	 */
 	public function canLogin(): bool
 	{
-		return ($this->aAttributes['can_login'] == '1');
+		return ($this->aAttributes['can_login'] == true);
 	}
 
 	/**

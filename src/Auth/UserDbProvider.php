@@ -39,9 +39,7 @@ namespace wlib\Application\Auth;
 use wlib\Db\Db;
 
 /**
- * User provider by database.
- *
- * @author Cédric Ducarre
+ * Database user provider.
  */
 class UserDbProvider implements IUserProvider
 {
@@ -50,6 +48,16 @@ class UserDbProvider implements IUserProvider
 	 * @var \wlib\Db\Db
 	 */
 	private $db;
+
+	/**
+	 * This provider allows user updates (register, renew password).
+	 * 
+	 * @return bool
+	 */
+	public function writeable(): bool
+	{
+		return true;
+	}
 
 	/**
 	 * @param \wlib\Db\Db Database instance.
