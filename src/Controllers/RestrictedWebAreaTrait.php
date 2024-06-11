@@ -36,21 +36,27 @@
 
 namespace wlib\Application\Controllers;
 
-use wlib\Http\Server\HttpException;
 use wlib\Http\Server\Response;
+use wlib\Http\Server\HttpException;
 
 /**
- * Controller to set a restricted area protected by the web guard.
+ * Use this trait to add restriction access to a controller.
  * 
  * @author Cédric Ducarre
  */
-abstract class RestrictedAreaController extends FrontController
+trait RestrictedWebAreaTrait
 {
+	/**
+	 * Set the "auth.web" authentification service.
+	 */
 	protected function authentification()
 	{
 		return 'auth.web';
 	}
 
+	/**
+	 * Check that a user is authenticated or redirect to login URL.
+	 */
 	protected function authenticate()
 	{
 		try { parent::authenticate(); }
