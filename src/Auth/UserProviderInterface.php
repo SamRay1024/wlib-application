@@ -41,31 +41,31 @@ namespace wlib\Application\Auth;
  *
  * @author Cédric Ducarre
  */
-interface IUserProvider
+interface UserProviderInterface
 {
 	/**
 	 * Get an user from its ID.
 	 *
 	 * @param mixed $mId
-	 * @return IUser
+	 * @return UserInterface
 	 */
-	public function getById(mixed $mId): ?IUser;
+	public function getById(mixed $mId): ?UserInterface;
 
 	/**
 	 * Get an user from its key.
 	 *
 	 * @param string $sKey
-	 * @return IUser
+	 * @return UserInterface
 	 */
-	public function getByKey(string $sKey): ?IUser;
+	public function getByKey(string $sKey): ?UserInterface;
 
 	/**
 	 * Get an user from its user name.
 	 *
 	 * @param string $sUsername
-	 * @return IUser
+	 * @return UserInterface
 	 */
-	public function getByUsername(string $sUsername): ?IUser;
+	public function getByUsername(string $sUsername): ?UserInterface;
 
 	/**
 	 * Return if the user provider accepts users modifications.

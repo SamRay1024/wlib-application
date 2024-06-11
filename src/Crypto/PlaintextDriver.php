@@ -48,7 +48,7 @@ namespace wlib\Application\Crypto;
  * 
  * @author Cédric Ducarre
  */
-class PlaintextDriver extends AbstractHashDriver implements IHashDriver
+class PlaintextDriver extends AbstractHashDriver implements HashDriverInterface
 {
 	/**
 	 * Return the given string without hashing.

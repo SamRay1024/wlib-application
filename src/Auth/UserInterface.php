@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /* ==== LICENCE AGREEMENT =====================================================
  *
@@ -36,26 +36,42 @@
 
 namespace wlib\Application\Auth;
 
-use wlib\Http\Server\Request;
-
 /**
- * Authentication providers contract.
+ * User contract.
  *
  * @author Cédric Ducarre
+ * @since 12/06/2015
  */
-interface IAuthProvider
+interface UserInterface
 {
 	/**
-	 * Authenticate an HTTP request.
-	 * 
-	 * @param \wlib\Http\Server\Request $request HTTP request.
+	 * Get the user ID.
+	 * @return mixed
 	 */
-	public function authenticate(Request $request);
+	public function getId(): mixed;
 
 	/**
-	 * Get authenticated user.
-	 * 
-	 * @return \wlib\Application\Auth\IUser|null
+	 * Get the user's name.
+	 * @return string
 	 */
-	public function getUser(): ?IUser;
+	public function getUsername(): string;
+
+	/**
+	 * Get the user key.
+	 * @return string
+	 */
+	public function getKey(): string;
+
+	/**
+	 * Get the user's password.
+	 *
+	 * @return string
+	 */
+	public function getPassword(): string;
+
+	/**
+	 * Checks if user can log in.
+	 * @return boolean
+	 */
+	public function canLogin(): bool;
 }

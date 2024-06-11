@@ -43,16 +43,16 @@ use LogicException;
  * 
  * @author Cédric Ducarre
  */
-class HashManager implements IHashDriver
+class HashManager implements HashDriverInterface
 {
 	const ALGO_BCRYPT = 'bcrypt';
 	const ALGO_PLAINTEXT = 'plaintext';
 
 	/**
 	 * The current hashing driver.
-	 * @var IHashDriver
+	 * @var HashDriverInterface
 	 */
-	private IHashDriver $driver;
+	private HashDriverInterface $driver;
 	
 	/**
 	 * Initialize manager with an algorithm.

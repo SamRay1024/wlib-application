@@ -36,6 +36,8 @@
 
 namespace wlib\Application\Auth;
 
+use wlib\Http\Server\Request;
+
 /**
  * Authenticate request by API key.
  *
@@ -45,15 +47,17 @@ class KeyAuthProvider extends AuthProvider
 {
 	/**
 	 * Authenticate user.
+	 * 
+	 * @param \wlib\Http\Server\Request $request
 	 */
-	public function authenticate()
+	public function authenticate(Request $request)
 	{
 		try
 		{
-			$sKey = $this->request->get('apikey');
+			$sKey = $request->get('apikey');
 
 			if ($sKey === null)
-				$sKey = $this->request->getHeader('X-Api-Key');
+				$sKey = $request->getHeader('X-Api-Key');
 
 			if ($sKey === null)
 				throw new \Exception('API key not provided');

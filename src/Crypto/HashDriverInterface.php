@@ -41,7 +41,7 @@ namespace wlib\Application\Crypto;
  * 
  * @author Cédric Ducarre
  */
-interface IHashDriver
+interface HashDriverInterface
 {
 	/**
 	 * Get info about the given hashed value.

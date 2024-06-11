@@ -41,7 +41,7 @@ use wlib\Db\Db;
 /**
  * Database user provider.
  */
-class UserDbProvider implements IUserProvider
+class UserDbProvider implements UserProviderInterface
 {
 	/**
 	 * DB instance.
@@ -71,9 +71,9 @@ class UserDbProvider implements IUserProvider
 	 * Get an user from its ID.
 	 *
 	 * @param int $id User ID.
-	 * @return IUser|null
+	 * @return UserInterface|null
 	 */
-	public function getById(mixed $id): ?IUser
+	public function getById(mixed $id): ?UserInterface
 	{
 		return $this->fetchUser('id', (string)(int) $id);
 	}
@@ -82,9 +82,9 @@ class UserDbProvider implements IUserProvider
 	 * Get an user from its key (API, ...).
 	 *
 	 * @param string $sKey Key.
-	 * @return IUser|null
+	 * @return UserInterface|null
 	 */
-	public function getByKey(string $sKey): ?IUser
+	public function getByKey(string $sKey): ?UserInterface
 	{
 		return $this->fetchUser('email', $sKey);
 	}
@@ -93,9 +93,9 @@ class UserDbProvider implements IUserProvider
 	 * Get an user from its username.
 	 *
 	 * @param string $sUsername Username.
-	 * @return IUser|null
+	 * @return UserInterface|null
 	 */
-	public function getByUsername(string $sUsername): ?IUser
+	public function getByUsername(string $sUsername): ?UserInterface
 	{
 		return $this->fetchUser('email', $sUsername);
 	}
@@ -105,9 +105,9 @@ class UserDbProvider implements IUserProvider
 	 * 
 	 * @param string $sColumn Database column name.
 	 * @param string $sValue Column value.
-	 * @return IUser
+	 * @return UserInterface
 	 */
-	private function fetchUser(string $sColumn, string $sValue): ?IUser
+	private function fetchUser(string $sColumn, string $sValue): ?UserInterface
 	{
 		$query = $this->db->query()
 			->select(['id', 'name', 'email', 'password', 'can_login'])

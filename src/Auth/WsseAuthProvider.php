@@ -78,13 +78,12 @@ class WsseAuthProvider extends AuthProvider
 	private string $sNoncesPath = '';
 
 	/**
-	 * @param \wlib\Http\Server\Request $request HTTP request.
-	 * @param \wlib\Application\Auth\IUserProvider $provider User provider.
+	 * @param \wlib\Application\Auth\UserProviderInterface $provider User provider.
 	 * @param string $sNoncesPath Path where nonces cache files will be saved.
 	 */
-	public function __construct(Request $request, IUserProvider $provider, string $sNoncesPath)
+	public function __construct(UserProviderInterface $provider, string $sNoncesPath)
 	{
-		parent::__construct($request, $provider);
+		parent::__construct($provider);
 		
 		$this->sNoncesPath = rtrim($sNoncesPath, '/');
 
@@ -98,14 +97,14 @@ class WsseAuthProvider extends AuthProvider
 	/**
 	 * Authenticate user.
 	 *
-	 * @return bool
+	 * @param \wlib\Http\Server\Request $request HTTP request.
 	 * @throws AuthenticateException
 	 */
-	public function authenticate()
+	public function authenticate(Request $request)
 	{
 		try
 		{
-			$this->validateRequest();
+			$this->validateRequest($request);
 			$this->validateToken();
 		}
 		catch (\Exception $e)
@@ -120,21 +119,22 @@ class WsseAuthProvider extends AuthProvider
 	/**
 	 * Validate the HTTP request's compliance with WSSE.
 	 *
+	 * @param \wlib\Http\Server\Request $request HTTP request.
 	 * @throws \Exception
 	 */
-	private function validateRequest()
+	private function validateRequest(Request $request)
 	{
-		if ($this->request->getHeader('Authorization') === null)
+		if ($request->getHeader('Authorization') === null)
 			throw new \Exception('"Authorization" header not found');
 
-		if ($this->request->getHeader('Authorization') !== 'WSSE profile="UsernameToken"')
+		if ($request->getHeader('Authorization') !== 'WSSE profile="UsernameToken"')
 			throw new \Exception('"Authorization" header must be \'WSSE profile="UsernameToken"\'');
 
-		if ($this->request->getHeader('X-WSSE') === null)
+		if ($request->getHeader('X-WSSE') === null)
 			throw new \Exception('"X-WSSE" header not found');
 
 		$sWSSERegex = '`UsernameToken Username="([^"]+)", PasswordDigest="([^"]+)", Nonce="([^"]+)", Created="([^"]+)"`';
-		if (preg_match($sWSSERegex, $this->request->getHeader('X-WSSE'), $matches) !== 1)
+		if (preg_match($sWSSERegex, $request->getHeader('X-WSSE'), $matches) !== 1)
 			throw new \Exception('"X-WSSE" syntax error');
 
 		$this->sUsername = $matches[1];
@@ -173,7 +173,6 @@ class WsseAuthProvider extends AuthProvider
 		if ($sDigest !== $this->sDigest)
 			throw new \Exception('invalid token');
 
-		// Si on arrive ici, utilisateur validé
 		$this->user = $user;
 	}
 }

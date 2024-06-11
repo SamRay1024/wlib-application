@@ -41,7 +41,7 @@ namespace wlib\Application\Auth;
  *
  * @author Cédric Ducarre
  */
-class User implements IUser
+class User implements UserInterface
 {
 	/**
 	 * User attributes.

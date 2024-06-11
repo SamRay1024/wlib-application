@@ -43,19 +43,19 @@ use wlib\Http\Server\Request;
  *
  * @author Cédric Ducarre
  */
-abstract class AuthProvider implements IAuthProvider
+abstract class AuthProvider implements AuthProviderInterface
 {
 	/**
 	 * User provider.
-	 * @var \wlib\Application\Auth\IUserProvider
+	 * @var UserProviderInterface
 	 */
-	protected IUserProvider $users;
+	protected UserProviderInterface $users;
 
 	/**
 	 * Current user.
-	 * @var \wlib\Application\Auth\IUser
+	 * @var UserInterface
 	 */
-	protected ?IUser $user;
+	protected ?UserInterface $user;
 
 	/**
 	 * Content for "realm" value in "WWW-Authenticate" header.
@@ -64,9 +64,9 @@ abstract class AuthProvider implements IAuthProvider
 	protected string $sRealm = 'Restricted content';
 
 	/**
-	 * @param \wlib\Application\Auth\IUserProvider $provider User provider.
+	 * @param UserProviderInterface $provider User provider.
 	 */
-	public function __construct(IUserProvider $users)
+	public function __construct(UserProviderInterface $users)
 	{
 		$this->users = $users;
 	}
@@ -81,9 +81,9 @@ abstract class AuthProvider implements IAuthProvider
 	/**
 	 * Get authenticated user.
 	 *
-	 * @return \wlib\Application\Auth\IUser|null
+	 * @return UserInterface|null
 	 */
-	public function getUser(): ?IUser
+	public function getUser(): ?UserInterface
 	{
 		return $this->user;
 	}

@@ -41,7 +41,7 @@ namespace wlib\Application\Crypto;
  * 
  * @author Cédric Ducarre
  */
-class BcryptDriver extends AbstractHashDriver implements IHashDriver
+class BcryptDriver extends AbstractHashDriver implements HashDriverInterface
 {
 	/**
 	 * Default cost value.

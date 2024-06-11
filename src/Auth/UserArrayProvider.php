@@ -43,7 +43,7 @@ use wlib\Application\Crypto\IHashDriver;
  *
  * @author Cédric Ducarre
  */
-class UserArrayProvider implements IUserProvider
+class UserArrayProvider implements UserProviderInterface
 {
 	/**
 	 * Users list.
@@ -79,9 +79,9 @@ class UserArrayProvider implements IUserProvider
 	 * Alias of `getByKey()`.
 	 *
 	 * @param mixed $mId User ID.
-	 * @return IUser|null
+	 * @return UserInterface|null
 	 */
-	public function getById(mixed $mId): ?IUser
+	public function getById(mixed $mId): ?UserInterface
 	{
 		return $this->getByUsername($mId);
 	}
@@ -90,9 +90,9 @@ class UserArrayProvider implements IUserProvider
 	 * Get an user from its key (API, ...).
 	 *
 	 * @param string $sKey Key value.
-	 * @return IUser|null
+	 * @return UserInterface|null
 	 */
-	public function getByKey(string $sKey): ?IUser
+	public function getByKey(string $sKey): ?UserInterface
 	{
 		return $this->getByUsername($sKey);
 	}
@@ -101,9 +101,9 @@ class UserArrayProvider implements IUserProvider
 	 * Get an user from ist username.
 	 *
 	 * @param string $sUsername Username value.
-	 * @return IUser|null
+	 * @return UserInterface|null
 	 */
-	public function getByUsername(string $sUsername): ?IUser
+	public function getByUsername(string $sUsername): ?UserInterface
 	{
 		if (!isset($this->aUsersList[$sUsername]))
 			return null;

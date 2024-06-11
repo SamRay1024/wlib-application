@@ -79,9 +79,9 @@ class WebGuard
 	private Session $session;
 
 	/**
-	 * @var \wlib\Application\Auth\IUserProvider
+	 * @var UserProviderInterface
 	 */
-	private IUserProvider $users;
+	private UserProviderInterface $users;
 
 	/**
 	 * Hash manager.
@@ -130,10 +130,10 @@ class WebGuard
 	 * 
 	 * @param \wlib\Application\Kernel $app Current application instance.
 	 * @param \wlib\Http\Server\Session $session Current session.
-	 * @param \wlib\Application\Auth\IUserProvider $users Users provider.
+	 * @param UserProviderInterface $users Users provider.
 	 * @param \wlib\Application\Crypto\IHashDriver $hmngr Hash manager.
 	 */
-	public function __construct(Kernel $app, Session $session, IUserProvider $users, IHashDriver $hmngr)
+	public function __construct(Kernel $app, Session $session, UserProviderInterface $users, IHashDriver $hmngr)
 	{
 		$this->app = $app;
 		$this->session = $session;
@@ -180,11 +180,11 @@ class WebGuard
 	 *
 	 * @param string $sUsername User identifier.
 	 * @param string $sPassword User password.
-	 * @return \wlib\Application\Auth\IUser
+	 * @return UserInterface
 	 */
-	public function login(string $sUsername, string $sPassword): IUser
+	public function login(string $sUsername, string $sPassword): UserInterface
 	{
-		/** @var IUser */
+		/** @var UserInterface */
 		$user = $this->users->getByUsername($sUsername);
 
 		if (
@@ -227,9 +227,9 @@ class WebGuard
 	/**
 	 * Get the current user.
 	 * 
-	 * @return \wlib\Application\Auth\IUser
+	 * @return UserInterface
 	 */
-	public function getCurrentUser(): ?IUser
+	public function getCurrentUser(): ?UserInterface
 	{
 		return $this->session->get(self::SESS_USER_KEY);
 	}
