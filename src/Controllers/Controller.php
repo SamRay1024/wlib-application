@@ -38,8 +38,8 @@ namespace wlib\Application\Controllers;
 
 use RuntimeException;
 use wlib\Application\Auth\AuthenticateException;
-use wlib\Application\Auth\IAuthProvider;
-use wlib\Application\Auth\IUser;
+use wlib\Application\Auth\AuthProviderInterface;
+use wlib\Application\Auth\UserInterface;
 use wlib\Application\Sys\Cache;
 use wlib\Application\Sys\Kernel;
 use wlib\Db\Db;
@@ -81,15 +81,15 @@ abstract class Controller
 
 	/**
 	 * Authentication provider.
-	 * @var \wlib\Application\Auth\IAuthProvider
+	 * @var \wlib\Application\Auth\AuthProviderInterface
 	 */
-	protected ?IAuthProvider $auth;
+	protected ?AuthProviderInterface $auth;
 
 	/**
 	 * Authenticated user.
-	 * @var \wlib\Application\Auth\IUser
+	 * @var \wlib\Application\Auth\UserInterface
 	 */
-	protected ?IUser $user;
+	protected ?UserInterface $user;
 
 	/**
 	 * HTTP cache handler.

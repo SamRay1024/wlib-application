@@ -38,7 +38,7 @@ namespace wlib\Application\Auth;
 
 use RuntimeException;
 use UnexpectedValueException;
-use wlib\Application\Crypto\IHashDriver;
+use wlib\Application\Crypto\HashDriverInterface;
 use wlib\Application\Sys\Kernel;
 use wlib\Application\Models\User;
 use wlib\Http\Server\Session;
@@ -85,9 +85,9 @@ class WebGuard
 
 	/**
 	 * Hash manager.
-	 * @var \wlib\Application\Crypto\IHashDriver
+	 * @var \wlib\Application\Crypto\HashDriverInterface
 	 */
-	private IHashDriver $hmngr;
+	private HashDriverInterface $hmngr;
 
 	/**
 	 * Login URL.
@@ -131,9 +131,9 @@ class WebGuard
 	 * @param \wlib\Application\Kernel $app Current application instance.
 	 * @param \wlib\Http\Server\Session $session Current session.
 	 * @param UserProviderInterface $users Users provider.
-	 * @param \wlib\Application\Crypto\IHashDriver $hmngr Hash manager.
+	 * @param \wlib\Application\Crypto\HashDriverInterface $hmngr Hash manager.
 	 */
-	public function __construct(Kernel $app, Session $session, UserProviderInterface $users, IHashDriver $hmngr)
+	public function __construct(Kernel $app, Session $session, UserProviderInterface $users, HashDriverInterface $hmngr)
 	{
 		$this->app = $app;
 		$this->session = $session;
