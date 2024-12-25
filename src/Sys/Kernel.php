@@ -39,6 +39,7 @@ namespace wlib\Application\Sys;
 use wlib\Db\Table;
 use wlib\Di\DiBox;
 use wlib\Http\Server\HttpException;
+use wlib\Http\Server\Response;
 
 /**
  * Kernel is the heart of a wlib application.
@@ -186,14 +187,31 @@ class Kernel extends DiBox
 		}
 		catch (HttpException $ex)
 		{
-			$this
-				->get('http.response')
-				->html(
-					'<h1>'.$ex->getStatusCode().' !</h1><p>Sorry, something wen\'t wrong !</p>'
+			$request = $this->get('http.request');
+			$response = $this->get('http.response');
+
+			if ($request->wantsJson() || $request->isJson())
+			{
+				$response->json(
+					['error' => [
+						'code' => $ex->getStatusCode(),
+						'title' => Response::getStatusMessage($ex->getStatusCode()),
+						'detail' => $ex->getMessage()
+					]],
+					$ex->getStatusCode()
+				);
+			}
+			else
+			{
+				$response->html(
+					'<h1>'. $ex->getStatusCode() .' '. Response::getStatusMessage($ex->getStatusCode())
+					.' !</h1><p>Sorry, something wen\'t wrong !</p>'
 					.'<h2>Message thrown :</h2><p>'. $ex->getMessage() .'</p>',
 					$ex->getStatusCode()
-				)
-				->send();
+				);
+			}
+			
+			$response->send();
 		}
 	}
 
