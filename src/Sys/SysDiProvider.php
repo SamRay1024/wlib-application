@@ -51,7 +51,7 @@ class SysDiProvider implements DiBoxProvider
 	public function provide(DiBox $box)
 	{
 		$box->singleton('http.request', \wlib\Http\Server\Request::class);
-		$box->bind('http.response', \wlib\Http\Server\Response::class);
+		$box->singleton('http.response', \wlib\Http\Server\Response::class);
 		$box->singleton('http.session', \wlib\Http\Server\Session::class);
 		$box->singleton('http.cache', \wlib\Application\Sys\Cache::class);
 
