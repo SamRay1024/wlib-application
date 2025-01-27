@@ -49,6 +49,11 @@ use wlib\Http\Server\Response;
  */
 class RestController extends Controller
 {
+	public function initialize()
+	{
+		$this->response->addHeader('Content-Type', 'application/json');
+	}
+
 	final public function start()
 	{
 		$sMethod = strtolower($this->method());
