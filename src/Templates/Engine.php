@@ -54,6 +54,12 @@ class Engine
 	 * @var string
 	 */
 	protected string $sFileExt = '';
+
+	/**
+	 * Data to transmit to templates files.
+	 * @var array
+	 */
+	protected array $aData = [];
 	
 	/**
 	 * __construct
@@ -106,11 +112,14 @@ class Engine
 	 * Render the given template file.
 	 *
 	 * @param string $sTplFile Template file address.
-	 * @param mixed $aData Data to pass to the template file.
+	 * @param array $aData Data to pass to the template file.
 	 * @return string Rendered template.
 	 */
-	public function render(string $sTplFile, $aData = []): string
+	public function render(string $sTplFile, array $aData = []): string
 	{
+		if (count($aData))
+			$this->aData = array_merge($this->aData, $aData);
+
 		reset($this->aSrcPath);
 
 		foreach ($this->aSrcPath as $sSrcPath)
@@ -119,7 +128,7 @@ class Engine
 
 			if (file_exists($sTplFileFull))
 			{
-				extract($aData);
+				extract($this->aData);
 
 				ob_start();
 				include $sTplFileFull;
