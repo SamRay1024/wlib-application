@@ -148,6 +148,11 @@ class Router
 				$sClassname = $sClassPath .'\\'. $sPart .'Controller';
 				break;
 			}
+			elseif (class_exists('\\wlib\\Application\\Controllers\\'. $sPart .'Controller'))
+			{
+				$sClassname = '\\wlib\\Application\\Controllers\\'. $sPart .'Controller';
+				break;
+			}
 			elseif ($sClassPath != $this->sControllersNamespace && class_exists($sClassPath .'\\IndexController'))
 			{
 				$sClassname = $sClassPath . '\\IndexController';

@@ -16,7 +16,8 @@
         "wlib/db": "^1.0",
         "wlib/i18n": "^1.0",
         "phpmailer/phpmailer": "^6.9",
-        "tracy/tracy": "^2.9"
+        "tracy/tracy": "^2.9",
+        "itsgoingd/clockwork": "^5.3"
     },
     "require-dev": {
         "pestphp/pest": "^2.5"

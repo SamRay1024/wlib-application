@@ -164,11 +164,7 @@ abstract class Controller
 	 */
 	protected function run()
 	{
-		if ($this->readCache())
-		{
-			$this->response->send();
-		}
-		else
+		if (!$this->readCache())
 		{
 			ob_start();
 
@@ -179,10 +175,18 @@ abstract class Controller
 			else
 				$this->response->replace(ob_get_clean() . $this->response->getBodyString());
 
-			$this->response->send();
-
 			$this->saveCache();
 		}
+	}
+
+	/**
+	 * Get the response.
+	 *
+	 * @return \wlib\Http\Server\Response
+	 */	
+	public function getResponse(): Response
+	{
+		return $this->response;
 	}
 
 	/* ==== AUTHENTICATION ================================================== */

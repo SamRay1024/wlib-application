@@ -53,8 +53,8 @@ class Kernel extends DiBox
 	public function __construct(array $aOptions = [])
 	{
 		$this->initConfig($aOptions);
-		$this->initErrorReporting();
 		$this->initAutoloader();
+		$this->initErrorReporting();
 		$this->initTimeAndLocale();
 		$this->initSession();
 		$this->initServices();
@@ -183,7 +183,10 @@ class Kernel extends DiBox
 		{
 			$aRoute = $router->dispatch();
 			$this->bind('http.route', $aRoute);
-			new $aRoute['controller_fqcn']($this);
+			
+			/* @var \wlib\Application\Controllers\Controller $controller */
+			$controller = new $aRoute['controller_fqcn']($this);
+			$response = $controller->getResponse();
 		}
 		catch (HttpException $ex)
 		{
@@ -211,8 +214,11 @@ class Kernel extends DiBox
 				);
 			}
 			
-			$response->send();
 		}
+
+		$this->get('sys.clockwork')->requestProcessed();
+
+		$response->send();
 	}
 
 	/**

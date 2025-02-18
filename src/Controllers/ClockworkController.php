@@ -34,49 +34,20 @@
  * 
  * ========================================================================== */
 
-namespace wlib\Application\Sys;
+namespace wlib\Application\Controllers;
 
-use Tracy\Debugger;
-use wlib\Di\DiBox;
-use wlib\Di\DiBoxProvider;
-use wlib\Tools\Hooks;
+use Clockwork\Support\Vanilla\Clockwork;
 
 /**
- * Debugging service provider.
- * 
- * @author Cédric Ducarre
+ * Clockwork data access controller.
+ *
+ * @see https://underground.works/clockwork/#docs-installation-vanilla
  */
-class DebugDiProvider implements DiBoxProvider
+class ClockworkController extends Controller
 {
-	public function provide(DiBox $box)
+	public function start()
 	{
-		Debugger::enable(($box['sys.production'] ? Debugger::Production : Debugger::Development));
-		Debugger::$strictMode = true;
-		Debugger::$dumpTheme = 'dark';
-		Debugger::$showLocation = true;
-		Debugger::$logDirectory = config('app.logs_path', '');
-
-		if (!$box['sys.production'])
-		{
-			$box->bind('sys.clockwork_config', [
-				'api' => '/clockwork/?request=',
-				'register_helpers' => true,
-				'storage_files_path' => config('app.logs_path') .'/clockwork'
-			]);
-
-			$box->singleton('sys.clockwork', function ($box, $args)
-			{
-				return \Clockwork\Support\Vanilla\Clockwork::init($box['sys.clockwork_config']);
-			});
-
-			$box->get('sys.clockwork');
-
-			Hooks::add('wlib.db.execute.after', function ($args)
-			{
-				clock()->addDatabaseQuery(
-					$args['sql'], $args['bindings'], $args['running_time'] * 1000
-				);
-			});
-		}
+		$clockwork = Clockwork::init($this->app->get('sys.clockwork_config'));
+		$clockwork->handleMetadata();
 	}
 }
