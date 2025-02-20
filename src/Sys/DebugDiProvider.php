@@ -61,7 +61,12 @@ class DebugDiProvider implements DiBoxProvider
 			$box->bind('sys.clockwork_config', [
 				'api' => '/clockwork/?request=',
 				'register_helpers' => true,
-				'storage_files_path' => config('app.logs_path') .'/clockwork'
+				'storage_files_path' => config('app.logs_path') . '/clockwork',
+				'web' => [
+					'enable' => true,
+					'path' => config('app.public_path') . '/vendor/clockwork',
+					'uri' => '/vendor/clockwork'
+				]
 			]);
 
 			$box->singleton('sys.clockwork', function ($box, $args)
@@ -70,12 +75,10 @@ class DebugDiProvider implements DiBoxProvider
 			});
 
 			$box->get('sys.clockwork');
-
-			Hooks::add('wlib.db.execute.after', function ($args)
+	
+			Hooks::add('wlib.db.execute.after', function($args)
 			{
-				clock()->addDatabaseQuery(
-					$args['sql'], $args['bindings'], $args['running_time'] * 1000
-				);
+				clock()->addDatabaseQuery($args['sql'], $args['bindings'], $args['running_time'] * 1000);
 			});
 		}
 	}

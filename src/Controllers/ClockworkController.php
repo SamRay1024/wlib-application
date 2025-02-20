@@ -48,6 +48,14 @@ class ClockworkController extends Controller
 	public function start()
 	{
 		$clockwork = Clockwork::init($this->app->get('sys.clockwork_config'));
-		$clockwork->handleMetadata();
+
+		switch ($this->arg(0))
+		{
+			case 'web':
+				return $clockwork->returnWeb();
+			
+			default:		
+				$clockwork->handleMetadata();
+		}
 	}
 }
