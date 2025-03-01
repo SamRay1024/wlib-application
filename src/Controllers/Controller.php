@@ -266,7 +266,7 @@ abstract class Controller
 	 */
 	protected function checkAccessRights()
 	{
-		if (!$this->user->canLogin() || !$this->allow())
+		if (!$this->user || !$this->user->canLogin() || !$this->allow())
 			$this->haltForbidden(
 				'Access denied ('. $this->request->getIp() .')'
 			);
