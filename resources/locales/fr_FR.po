@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wlib/application\n"
-"POT-Creation-Date: 2024-05-24 19:31+0200\n"
-"PO-Revision-Date: 2024-05-24 19:31+0200\n"
+"POT-Creation-Date: 2025-03-13 00:27+0100\n"
+"PO-Revision-Date: 2025-03-13 00:28+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -16,6 +16,126 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_n;_x;_nx\n"
 "X-Poedit-SearchPath-0: src\n"
 "X-Poedit-SearchPath-1: resources\n"
+
+#: resources/templates/auth.html.php:49
+msgid "User:"
+msgstr "Utilisateur :"
+
+#: resources/templates/auth.html.php:56 resources/templates/auth.html.php:125
+#: resources/templates/auth.html.php:182
+msgid "Password:"
+msgstr "Mot de passe :"
+
+#: resources/templates/auth.html.php:63
+#: resources/templates/mails/auth/password-updated.html.php:34
+msgid "Connect"
+msgstr "Se connecter"
+
+#: resources/templates/auth.html.php:69
+msgid "Register"
+msgstr "Créer un compte"
+
+#: resources/templates/auth.html.php:71
+msgid "Forgot password ?"
+msgstr "Mot de passe oublié ?"
+
+#: resources/templates/auth.html.php:80
+msgid "Register your email address"
+msgstr "Enregistrez votre adresse de courriel"
+
+#: resources/templates/auth.html.php:83 resources/templates/auth.html.php:149
+msgid "Email address:"
+msgstr "Adresse de courriel :"
+
+#: resources/templates/auth.html.php:89
+msgid "A validation email with a link will be sent to the given address."
+msgstr ""
+"Un courriel contenant un lien de validation sera envoyé à l'adresse indiquée."
+
+#: resources/templates/auth.html.php:90
+msgid "Please click on the link to continue the registering process."
+msgstr ""
+"Veuillez cliquer sur le lien afin de poursuivre le processus d'ouverture de "
+"compte."
+
+#: resources/templates/auth.html.php:93 resources/templates/auth.html.php:159
+msgid "Send"
+msgstr "Envoyer"
+
+#: resources/templates/auth.html.php:97 resources/templates/auth.html.php:163
+#: resources/templates/auth.html.php:200
+msgid "« Go back to login"
+msgstr "« Retourner à la connexion"
+
+#: resources/templates/auth.html.php:105
+msgid "Thanks for your interest !"
+msgstr "Merci pour votre intérêt !"
+
+#: resources/templates/auth.html.php:106
+msgid ""
+"A validation email has been sent. Check your mail box for our confirmation "
+"email."
+msgstr ""
+"Un courriel de validation a été envoyé. Vérifiez votre boîte de réception."
+
+#: resources/templates/auth.html.php:107
+msgid "You can now close this page. See you very soon !"
+msgstr "Vous pouvez désormais fermer cette page. À tout de suite !"
+
+#: resources/templates/auth.html.php:113
+msgid "You're almost done !"
+msgstr "Vous y êtes presque !"
+
+#: resources/templates/auth.html.php:118
+msgid "Your name:"
+msgstr "Votre nom :"
+
+#: resources/templates/auth.html.php:132 resources/templates/auth.html.php:189
+msgid "Password verification:"
+msgstr "Vérification du mot de passe :"
+
+#: resources/templates/auth.html.php:139
+#: resources/templates/mails/auth/confirm-email.html.php:29
+msgid "Create my account"
+msgstr "Créer mon compte"
+
+#: resources/templates/auth.html.php:146
+msgid "Don't remember your password ?"
+msgstr "Vous avez oublié votre mot de passe ?"
+
+#: resources/templates/auth.html.php:155
+msgid "Please fill in with your account email address."
+msgstr "Merci de renseigner l'adresse de courriel de votre compte."
+
+#: resources/templates/auth.html.php:156
+msgid "You will receive an email with a link to renew your password."
+msgstr ""
+"Un lien pour accéder au renouvellement de votre mot de passe sera envoyé."
+
+#: resources/templates/auth.html.php:171
+msgid "Password renewal in progress"
+msgstr "Renouvellement de mot de passe en cours"
+
+#: resources/templates/auth.html.php:172
+msgid ""
+"An email has been sent with a link to access password renewal form. Check "
+"your mail box."
+msgstr ""
+"Un courriel contenant un lien pour accéder au formulaire de renouvellement "
+"de mot de passe a été envoyé. Vérifiez votre boite de réception."
+
+#: resources/templates/auth.html.php:173
+msgid "You can now close this page."
+msgstr "Vous pouvez désormais fermer cette page."
+
+#: resources/templates/auth.html.php:179
+#: resources/templates/mails/auth/renew-password.html.php:12
+msgid "Renew your password"
+msgstr "Renouveler votre mot de passe"
+
+#: resources/templates/auth.html.php:196
+msgid "Update password"
+msgstr "Mettre à jour le mot passe"
 
 #: resources/templates/mails/auth/confirm-email.html.php:3
 #: resources/templates/mails/auth/confirm-email.html.php:12
@@ -40,10 +160,6 @@ msgid ""
 msgstr ""
 "Si vous n'êtes pas à l'origine de cette demande d'inscription, vous pouvez "
 "simplement ignorer et supprimer ce message."
-
-#: resources/templates/mails/auth/confirm-email.html.php:29
-msgid "Create my account"
-msgstr "Créer mon compte"
 
 #: resources/templates/mails/auth/password-updated.html.php:3
 #: resources/templates/mails/auth/password-updated.html.php:13
@@ -79,10 +195,6 @@ msgstr ""
 "De <strong>relancer la procédure de mot de passe oublié</strong> pour "
 "définir un nouveau mot de passe."
 
-#: resources/templates/mails/auth/password-updated.html.php:34
-msgid "Connect"
-msgstr "Se connecter"
-
 #: resources/templates/mails/auth/renew-password.html.php:3
 msgid "Password renewal confirmation"
 msgstr "Confirmation de renouvellement de mot de passe"
@@ -90,10 +202,6 @@ msgstr "Confirmation de renouvellement de mot de passe"
 #: resources/templates/mails/auth/renew-password.html.php:4
 msgid "This is the validation email to renew your password."
 msgstr "Ceci est le courriel de validation pour renouveler votre mot de passe."
-
-#: resources/templates/mails/auth/renew-password.html.php:12
-msgid "Renew your password"
-msgstr "Renouveler votre mot de passe"
 
 #: resources/templates/mails/auth/renew-password.html.php:13
 msgid "To renew your password, please click on the button below."
@@ -113,70 +221,74 @@ msgstr ""
 msgid "Renew my password"
 msgstr "Renouveler mon mot de passe"
 
-#: src/Auth/WebGuard.php:164
+#: src/Auth/WebGuard.php:196
 msgid "Access denied, please check your credentials or contact support."
 msgstr ""
 "Accès refusé, veuillez vérifier vos informations d'identification ou "
 "contacter le support."
 
-#: src/Auth/WebGuard.php:219
+#: src/Auth/WebGuard.php:251
 msgid "You have to provide an email address to register."
 msgstr "Vous devez renseigner une adresse de courriel pour vous inscrire."
 
-#: src/Auth/WebGuard.php:229
+#: src/Auth/WebGuard.php:261
 msgid "This email address is already registered."
 msgstr "Cette adresse de courriel est déjà enregistrée."
 
-#: src/Auth/WebGuard.php:278
+#: src/Auth/WebGuard.php:310
 msgid "Verification failed : user not found."
 msgstr "Vérification échouée : utilisateur introuvable."
 
-#: src/Auth/WebGuard.php:283
+#: src/Auth/WebGuard.php:315
 msgid "Please fill in your name."
 msgstr "Merci de renseigner votre nom."
 
-#: src/Auth/WebGuard.php:288
+#: src/Auth/WebGuard.php:320
 msgid "Please fill in your password."
 msgstr "Merci de définir votre mot de passe."
 
-#: src/Auth/WebGuard.php:317
+#: src/Auth/WebGuard.php:349
 msgid "You have to provide a valid email address to renew your password."
 msgstr ""
 "Vous devez renseigner une adresse de courriel valide pour renouveler votre "
 "mot de passe."
 
-#: src/Auth/WebGuard.php:359
+#: src/Auth/WebGuard.php:391 src/Controllers/WebGateController.php:298
 msgid "Password renewal failed : user not found."
 msgstr "Echec du renouvellement de mot de passe : utilisateur introuvable."
 
-#: src/Auth/WebGuard.php:364
+#: src/Auth/WebGuard.php:396
 msgid "Please fill in your new password."
 msgstr "Veuillez saisir votre nouveau mot de passe."
 
-#: src/Controllers/Controller.php:603
+#: src/Controllers/Controller.php:607
 msgid "Invalid form, please try again."
 msgstr "Formulaire invalide, veuillez recommencer."
+
+#: src/Controllers/WebGateController.php:214
+msgid "Verification failed : please renew your registration."
+msgstr "Vérification échouée : veuillez renouveler votre inscription."
+
+#: src/Controllers/WebGateController.php:219
+msgid "Your account has been verified. You can now log in !"
+msgstr "Votre compte a été vérifié. Vous pouvez désormais vous connecter !"
+
+#: src/Controllers/WebGateController.php:311
+msgid "Password renewal failed : please restart the procedure."
+msgstr ""
+"Echec du renouvellement du mot de passe : veuillez relancer la procédure."
+
+#: src/Controllers/WebGateController.php:316
+msgid "Your password has been updated. You should log in again."
+msgstr ""
+"Votre mot de passe a été mis à jour. Vous devriez pouvoir vous connecter à "
+"nouveau."
 
 #~ msgid "Password verification mismatch."
 #~ msgstr "La vérification du mot de passe ne correspond pas."
 
-#~ msgid "Verification failed : please renew your registration."
-#~ msgstr "Vérification échouée : veuillez renouveler votre inscription."
-
-#~ msgid "Your account has been verified. You can now log in !"
-#~ msgstr "Votre compte a été vérifié. Vous pouvez désormais vous connecter !"
-
 #~ msgid "Action not allowed."
 #~ msgstr "Action non autorisée."
-
-#~ msgid "Password renewal failed : please restart the procedure."
-#~ msgstr ""
-#~ "Echec du renouvellement du mot de passe : veuillez relancer la procédure."
-
-#~ msgid "Your password has been updated. You should log in again."
-#~ msgstr ""
-#~ "Votre mot de passe a été mis à jour. Vous devriez pouvoir vous connecter "
-#~ "à nouveau."
 
 #~ msgid "Edit feed"
 #~ msgstr "Modifier le flux"
@@ -213,88 +325,6 @@ msgstr "Formulaire invalide, veuillez recommencer."
 
 #~ msgid "No article at this time."
 #~ msgstr "Aucun article pour l'instant."
-
-#~ msgid "User:"
-#~ msgstr "Utilisateur :"
-
-#~ msgid "Password:"
-#~ msgstr "Mot de passe :"
-
-#~ msgid "Register"
-#~ msgstr "Créer un compte"
-
-#~ msgid "Forgot password ?"
-#~ msgstr "Mot de passe oublié ?"
-
-#~ msgid "Register your email address"
-#~ msgstr "Enregistrez votre adresse de courriel"
-
-#~ msgid "Email address:"
-#~ msgstr "Adresse de courriel :"
-
-#~ msgid "A validation email with a link will be sent to the given address."
-#~ msgstr ""
-#~ "Un courriel contenant un lien de validation sera envoyé à l'adresse "
-#~ "indiquée."
-
-#~ msgid "Please click on the link to continue the registering process."
-#~ msgstr ""
-#~ "Veuillez cliquer sur le lien afin de poursuivre le processus d'ouverture "
-#~ "de compte."
-
-#~ msgid "Send"
-#~ msgstr "Envoyer"
-
-#~ msgid "« Go back to login"
-#~ msgstr "« Retourner à la connexion"
-
-#~ msgid "Thanks for your interest !"
-#~ msgstr "Merci pour votre intérêt !"
-
-#~ msgid ""
-#~ "A validation email has been sent. Check your mail box for our "
-#~ "confirmation email."
-#~ msgstr ""
-#~ "Un courriel de validation a été envoyé. Vérifiez votre boîte de réception."
-
-#~ msgid "You can now close this page. See you very soon !"
-#~ msgstr "Vous pouvez désormais fermer cette page. À tout de suite !"
-
-#~ msgid "You're almost done !"
-#~ msgstr "Vous y êtes presque !"
-
-#~ msgid "Your name:"
-#~ msgstr "Votre nom :"
-
-#~ msgid "Password verification:"
-#~ msgstr "Vérification du mot de passe :"
-
-#~ msgid "Don't remember your password ?"
-#~ msgstr "Vous avez oublié votre mot de passe ?"
-
-#~ msgid "Please fill in with your account email address."
-#~ msgstr "Merci de renseigner l'adresse de courriel de votre compte."
-
-#~ msgid "You will receive an email with a link to renew your password."
-#~ msgstr ""
-#~ "Un lien pour accéder au renouvellement de votre mot de passe sera envoyé."
-
-#~ msgid "Password renewal in progress"
-#~ msgstr "Renouvellement de mot de passe en cours"
-
-#~ msgid ""
-#~ "An email has been sent with a link to access password renewal form. Check "
-#~ "your mail box."
-#~ msgstr ""
-#~ "Un courriel contenant un lien pour accéder au formulaire de "
-#~ "renouvellement de mot de passe a été envoyé. Vérifiez votre boite de "
-#~ "réception."
-
-#~ msgid "You can now close this page."
-#~ msgstr "Vous pouvez désormais fermer cette page."
-
-#~ msgid "Update password"
-#~ msgstr "Mettre à jour le mot passe"
 
 #~ msgid "This is an automated email sent from <strong>FeedStack</strong>."
 #~ msgstr ""
