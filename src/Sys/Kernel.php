@@ -40,6 +40,7 @@ use wlib\Db\Table;
 use wlib\Di\DiBox;
 use wlib\Http\Server\HttpException;
 use wlib\Http\Server\Response;
+use wlib\Tools\Hooks;
 
 /**
  * Kernel is the heart of a wlib application.
@@ -57,7 +58,7 @@ class Kernel extends DiBox
 		$this->initErrorReporting();
 		$this->initTimeAndLocale();
 		$this->initSession();
-		$this->initServices();
+		$this->initServiceProviders();
 	}
 
 	/**
@@ -94,8 +95,6 @@ class Kernel extends DiBox
 		error_reporting(-1);
 		ini_set('display_errors', !$this['sys.production']);
 		set_error_handler([$this, 'handleError']);
-
-		$this->register(DebugDiProvider::class);
 	}
 
 	/**
@@ -128,9 +127,6 @@ class Kernel extends DiBox
 	private function initTimeAndLocale()
 	{
 		date_default_timezone_set(config('app.timezone', 'Europe/Paris'));
-	
-		$this->register(\wlib\Application\L10n\L10nDiProvider::class);
-		$this->get('translator');
 	}
 
 	/**
@@ -144,15 +140,17 @@ class Kernel extends DiBox
 	}
 
 	/**
-	 * Initialize kernel services.
+	 * Initialize kernel service providers.
 	 */
-	private function initServices()
+	private function initServiceProviders()
 	{
+		$this->register(DebugDiProvider::class);
 		$this->register(SysDiProvider::class);
 		$this->register(\wlib\Application\Templates\EngineDiProvider::class);
 		$this->register(\wlib\Application\Auth\AuthDiProvider::class);
 		$this->register(\wlib\Application\Mailer\MailerDiProvider::class);
 		$this->register(\wlib\Application\Crypto\HashDiProvider::class);
+		$this->register(\wlib\Application\L10n\L10nDiProvider::class);
 	}
 
 	/**
@@ -174,14 +172,19 @@ class Kernel extends DiBox
 	 */
 	public function run()
 	{
-		$router = $this->get('http.router', [
-			config('app.ns_controllers'),
-			config('app.base_uri', '/')
-		]);
-
 		try
 		{
-			$aRoute = $router->dispatch();
+			$this->bootServiceProviders();
+			
+			$aRoute = $this->get(
+				'http.router', [
+					config('app.ns_controllers'),
+					config('app.base_uri', '/')
+				])
+				->dispatch();
+			
+			Hooks::do('wlib.app.router.dispatch.after', ['route' => &$aRoute]);
+			
 			$this->bind('http.route', $aRoute);
 			
 			/* @var \wlib\Application\Controllers\Controller $controller */
@@ -219,6 +222,22 @@ class Kernel extends DiBox
 		$this->get('sys.clockwork')->requestProcessed();
 
 		$response->send();
+	}
+	
+	/**
+	 * Call `boot()` method of all service providers that defined one.
+	 *
+	 * The `boot()` method receives current application instance.
+	 * 
+	 * @return void
+	 */
+	private function bootServiceProviders()
+	{
+		foreach($this->getProviders() as $provider)
+		{
+			if (method_exists($provider, 'boot'))
+				call_user_func([$provider, 'boot'], $this);
+		}
 	}
 
 	/**

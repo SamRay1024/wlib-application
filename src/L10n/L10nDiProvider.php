@@ -36,6 +36,7 @@
 
 namespace wlib\Application\L10n;
 
+use wlib\Application\Sys\Kernel;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
 use wlib\I18n\Translator;
@@ -66,5 +67,10 @@ class L10nDiProvider implements DiBoxProvider
 
 			return $translator;
 		});
+	}
+
+	public function boot(Kernel $app)
+	{
+		$app->get('translator');
 	}
 }
