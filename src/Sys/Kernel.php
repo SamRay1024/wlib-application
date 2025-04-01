@@ -175,48 +175,11 @@ class Kernel extends DiBox
 		try
 		{
 			$this->bootServiceProviders();
-			
-			$aRoute = $this->get(
-				'http.router', [
-					config('app.ns_controllers'),
-					config('app.base_uri', '/')
-				])
-				->dispatch();
-			
-			Hooks::do('wlib.app.router.dispatch.after', ['route' => &$aRoute]);
-			
-			$this->bind('http.route', $aRoute);
-			
-			/* @var \wlib\Application\Controllers\Controller $controller */
-			$controller = new $aRoute['controller_fqcn']($this);
-			$response = $controller->getResponse();
+			$response = $this->handleRequest();
 		}
 		catch (HttpException $ex)
 		{
-			$request = $this->get('http.request');
-			$response = $this->get('http.response');
-
-			if ($request->wantsJson() || $request->isJson())
-			{
-				$response->json(
-					['error' => [
-						'code' => $ex->getStatusCode(),
-						'title' => Response::getStatusMessage($ex->getStatusCode()),
-						'detail' => $ex->getMessage()
-					]],
-					$ex->getStatusCode()
-				);
-			}
-			else
-			{
-				$response->html(
-					'<h1>'. $ex->getStatusCode() .' '. Response::getStatusMessage($ex->getStatusCode())
-					.' !</h1><p>Sorry, something wen\'t wrong !</p>'
-					.'<h2>Message thrown :</h2><p>'. $ex->getMessage() .'</p>',
-					$ex->getStatusCode()
-				);
-			}
-			
+			$response = $this->handleRequestError($ex);
 		}
 
 		$this->get('sys.clockwork')->requestProcessed();
@@ -238,6 +201,66 @@ class Kernel extends DiBox
 			if (method_exists($provider, 'boot'))
 				call_user_func([$provider, 'boot'], $this);
 		}
+	}
+	
+	/**
+	 * Handle the HTTP request.
+	 *
+	 * @return Response
+	 */
+	private function handleRequest(): Response
+	{
+		$aRoute = $this->get(
+			'http.router',
+			[
+				config('app.ns_controllers'),
+				config('app.base_uri', '/')
+			]
+		)
+			->dispatch();
+
+		Hooks::do('wlib.app.router.dispatch.after', ['route' => &$aRoute]);
+
+		$this->bind('http.route', $aRoute);
+
+		/* @var \wlib\Application\Controllers\Controller $controller */
+		$controller = new $aRoute['controller_fqcn']($this);
+		return $controller->getResponse();
+	}
+	
+	/**
+	 * Handle request error.
+	 *
+	 * @param mixed $ex Raised exception by controller.
+	 * @return Response
+	 */
+	private function handleRequestError(\Exception $ex): Response
+	{
+		$request = $this->get('http.request');
+		$response = $this->get('http.response');
+
+		if ($request->wantsJson() || $request->isJson())
+		{
+			$response->json(
+				['error' => [
+					'code' => $ex->getStatusCode(),
+					'title' => Response::getStatusMessage($ex->getStatusCode()),
+					'detail' => $ex->getMessage()
+				]],
+				$ex->getStatusCode()
+			);
+		}
+		else
+		{
+			$response->html(
+				'<h1>'. $ex->getStatusCode() .' '. Response::getStatusMessage($ex->getStatusCode())
+				.' !</h1><p>Sorry, something wen\'t wrong !</p>'
+				.'<h2>Message thrown :</h2><p>'. $ex->getMessage() .'</p>',
+				$ex->getStatusCode()
+			);
+		}
+
+		return $response;
 	}
 
 	/**
