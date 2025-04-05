@@ -56,6 +56,29 @@ class User extends Table
 	const COL_UPDATED_AT_NAME = 'updated_at';
 	const COL_DELETED_AT_NAME = 'deleted_at';
 
+	/**
+	 * Run the create table SQL statement.
+	 *
+	 * @return void
+	 */
+	public function createTable()
+	{
+		$this->oDb->execute(
+			'CREATE TABLE IF NOT EXISTS users (
+				id INTEGER PRIMARY KEY,
+				name VARCHAR NOT NULL,
+				email VARCHAR NOT NULL UNIQUE,
+				password VARCHAR,
+				token VARCHAR,
+				can_login INTEGER,
+				created_at DATETIME,
+				updated_at DATETIME,
+				verified_at DATETIME,
+				deleted_at DATETIME
+			);'
+		);
+	}
+
 	public function filterFields(array $aFields, $id = 0): array
 	{
 		$aFiltered = filter_var_array($aFields, [
