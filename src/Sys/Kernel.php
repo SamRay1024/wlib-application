@@ -50,15 +50,40 @@ use wlib\Tools\Hooks;
 class Kernel extends DiBox
 {
 	const VERSION = '0.0.1';
+	
+	/**
+	 * Application base path.
+	 *
+	 * @var string
+	 */
+	protected $sBasePath = '';
 
-	public function __construct(array $aOptions = [])
+	public function __construct(string $sBasePath, array $aOptions = [])
 	{
+		$this->sBasePath = rtrim($sBasePath, '\/');
+
 		$this->initConfig($aOptions);
 		$this->initAutoloader();
 		$this->initErrorReporting();
 		$this->initTimeAndLocale();
 		$this->initSession();
 		$this->initServiceProviders();
+	}
+	
+	/**
+	 * Prepend base path to the given path if it's not absolute.
+	 *
+	 * A path is considered absolute if it starts with a directory separator.
+	 * 
+	 * @param string $sPath Path to prepend if necessary.
+	 * @return void
+	 */
+	private function prependBasePath(string $sPath)
+	{
+		return (!str_starts_with($sPath, '/')
+			? $this->sBasePath.DIRECTORY_SEPARATOR.$sPath
+			: $sPath
+		);	
 	}
 
 	/**
@@ -68,20 +93,25 @@ class Kernel extends DiBox
 	{
 		$aOptions = array_replace(
 			[
-				'sys.config_dir'	=> '',
-				'sys.composer'		=> ''
+				'sys.config_dir'	=> 'config',
+				'sys.composer'		=> '',
+				'sys.env_filename'	=> '.env'
 			],
 			$aOptions
 		);
+
+		$aOptions['sys.base_path'] = $this->sBasePath;
+		$aOptions['sys.config_dir'] = $this->prependBasePath($aOptions['sys.config_dir']);
 
 		foreach ($aOptions as $mKey => $mValue)
 		{
 			$this->bind($mKey, $mValue);
 		}
-		
-		addConfigIncludePath($this['sys.config_dir']);
 
 		$this->bind('sys.production', (bool) config('app.production', false));
+
+		loadDotEnvFile($this->sBasePath . DIRECTORY_SEPARATOR . $this['sys.env_filename']);
+		addConfigIncludePath($this['sys.config_dir']);
 
 		createDir(config('app.cache_path'), 0755);
 		createDir(config('app.logs_path'), 0755);
@@ -196,7 +226,7 @@ class Kernel extends DiBox
 	 */
 	private function bootServiceProviders()
 	{
-		foreach($this->getProviders() as $provider)
+		foreach ($this->getProviders() as $provider)
 		{
 			if (method_exists($provider, 'boot'))
 				call_user_func([$provider, 'boot'], $this);
