@@ -108,10 +108,10 @@ class Kernel extends DiBox
 			$this->bind($mKey, $mValue);
 		}
 
-		$this->bind('sys.production', (bool) config('app.production', false));
-
 		loadDotEnvFile($this->sBasePath . DIRECTORY_SEPARATOR . $this['sys.env_filename']);
 		addConfigIncludePath($this['sys.config_dir']);
+		
+		$this->bind('sys.production', (bool) config('app.production', false));
 
 		createDir(config('app.cache_path'), 0755);
 		createDir(config('app.logs_path'), 0755);
