@@ -39,6 +39,7 @@ namespace wlib\Application\Models;
 use RuntimeException;
 use UnexpectedValueException;
 use wlib\Application\Exceptions\UnexpectedFieldValueException;
+use wlib\Db\Db;
 use wlib\Db\Table;
 
 /**
@@ -63,19 +64,24 @@ class User extends Table
 	 */
 	public function createTable()
 	{
+		$sAutoIncrement = ($this->oDb->getDriver() == Db::DRV_SQLTE
+			? 'AUTOINCREMENT'
+			: 'AUTO_INCREMENT'
+		);
+
 		$this->oDb->execute(
-			'CREATE TABLE IF NOT EXISTS users (
-				id INTEGER PRIMARY KEY,
-				name VARCHAR NOT NULL,
-				email VARCHAR NOT NULL UNIQUE,
-				password VARCHAR,
-				token VARCHAR,
+			"CREATE TABLE IF NOT EXISTS users (
+				id INTEGER PRIMARY KEY $sAutoIncrement,
+				name VARCHAR(80) NOT NULL,
+				email VARCHAR(255) NOT NULL UNIQUE,
+				password VARCHAR(64),
+				token VARCHAR(255),
 				can_login INTEGER,
 				created_at DATETIME,
 				updated_at DATETIME,
 				verified_at DATETIME,
 				deleted_at DATETIME
-			);'
+			);"
 		);
 	}
 
@@ -89,7 +95,7 @@ class User extends Table
 			'can_login'		=> FILTER_VALIDATE_BOOL,
 			'verified_at'	=> $this->getFilter('validate_date')
 		], false);
-		
+
 		if (!count($aFiltered))
 			throw new UnexpectedValueException(
 				static::class .' : no data provided. Nothing to do.'
