@@ -102,13 +102,14 @@ class Kernel extends DiBox
 
 		$aOptions['sys.base_path'] = $this->sBasePath;
 		$aOptions['sys.config_dir'] = $this->prependBasePath($aOptions['sys.config_dir']);
+		$aOptions['sys.env_file'] = $this->sBasePath . DIRECTORY_SEPARATOR . $aOptions['sys.env_filename'];
 
 		foreach ($aOptions as $mKey => $mValue)
 		{
 			$this->bind($mKey, $mValue);
 		}
 
-		loadDotEnvFile($this->sBasePath . DIRECTORY_SEPARATOR . $this['sys.env_filename']);
+		loadDotEnvFile($this['sys.env_file']);
 		addConfigIncludePath($this['sys.config_dir']);
 		
 		$this->bind('sys.production', (bool) config('app.production', false));
