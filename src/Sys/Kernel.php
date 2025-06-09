@@ -109,7 +109,9 @@ class Kernel extends DiBox
 			$this->bind($mKey, $mValue);
 		}
 
-		loadDotEnvFile($this['sys.env_file']);
+		try { loadDotEnvFile($this['sys.env_file']); }
+		catch (\Exception $e) {}
+		
 		addConfigIncludePath($this['sys.config_dir']);
 		
 		$this->bind('sys.production', (bool) config('app.production', false));
