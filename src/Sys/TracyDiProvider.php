@@ -81,12 +81,15 @@ class TracyDiProvider implements DiBoxProvider
 
 		foreach ($aDb as $sName => $aCfg)
 		{
-			/** @var \wlib\Db\Db $db */
-			$db = $box['db.'.$sName];
-
-			$db->saveQueries(!$box['sys.production']);
-
-			\Tracy\Debugger::getBar()->addPanel(new DbPanel($sName, $db));
+			if (isset($box['db.'.$sName]))
+			{
+				/** @var \wlib\Db\Db $db */
+				$db = $box['db.'.$sName];
+	
+				$db->saveQueries(!$box['sys.production']);
+	
+				\Tracy\Debugger::getBar()->addPanel(new DbPanel($sName, $db));
+			}
 		}
 	}
 }

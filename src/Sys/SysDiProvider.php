@@ -69,16 +69,19 @@ class SysDiProvider implements DiBoxProvider
 
 		foreach ($aDatabases as $sName => $aConnection)
 		{
+			if (trim($aConnection['driver']) == '')
+				continue;
+
 			$box->singleton('db.'.$sName, function($box, $args) use ($aConnection)
 			{
 				return new Db(
-					arrayValue($aConnection, 'driver'),
-					arrayValue($aConnection, 'database'),
-					arrayValue($aConnection, 'username'),
-					arrayValue($aConnection, 'password'),
-					arrayValue($aConnection, 'host'),
-					arrayValue($aConnection, 'port'),
-					arrayValue($aConnection, 'timeout')
+					(string) arrayValue($aConnection, 'driver'),
+					(string) arrayValue($aConnection, 'database'),
+					(string) arrayValue($aConnection, 'username'),
+					(string) arrayValue($aConnection, 'password'),
+					(string) arrayValue($aConnection, 'host'),
+					(int) arrayValue($aConnection, 'port'),
+					(int) arrayValue($aConnection, 'timeout')
 				);
 			});
 		}
