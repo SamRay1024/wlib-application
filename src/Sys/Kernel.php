@@ -111,7 +111,7 @@ class Kernel extends DiBox
 
 		try { loadDotEnvFile($this['sys.env_file']); }
 		catch (\Exception $e) {}
-		
+
 		addConfigIncludePath($this['sys.config_dir']);
 		
 		$this->bind('sys.production', (bool) config('app.production', false));
@@ -214,9 +214,10 @@ class Kernel extends DiBox
 		{
 			$response = $this->handleRequestError($ex);
 		}
-
-		$this->get('sys.clockwork')->requestProcessed();
-
+		
+		if ($this->has('sys.clockwork'))
+			$this->get('sys.clockwork')->requestProcessed();
+		
 		$response->send();
 	}
 	

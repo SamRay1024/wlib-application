@@ -57,7 +57,7 @@ abstract class Controller
 {
 	/**
 	 * Application instance.
-	 * @var \wlib\Application\Kernel
+	 * @var \wlib\Application\Sys\Kernel
 	 */
 	protected Kernel $app;
 
@@ -118,7 +118,7 @@ abstract class Controller
 	/**
 	 * Controller boot.
 	 * 
-	 * @param \wlib\Application\Kernel $app
+	 * @param \wlib\Application\Sys\Kernel $app
 	 */
 	public function __construct(Kernel $app)
 	{
