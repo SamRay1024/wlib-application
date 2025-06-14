@@ -87,7 +87,7 @@ class WebGuard
 	 * Hash manager.
 	 * @var \wlib\Application\Crypto\HashDriverInterface
 	 */
-	private HashDriverInterface $hmngr;
+	private HashDriverInterface $hmgr;
 
 	/**
 	 * Login URL.
@@ -128,17 +128,17 @@ class WebGuard
 	/**
 	 * Initialize the Guard.
 	 * 
-	 * @param \wlib\Application\Kernel $app Current application instance.
+	 * @param \wlib\Application\Sys\Kernel $app Current application instance.
 	 * @param \wlib\Http\Server\Session $session Current session.
 	 * @param UserProviderInterface $users Users provider.
-	 * @param \wlib\Application\Crypto\HashDriverInterface $hmngr Hash manager.
+	 * @param \wlib\Application\Crypto\HashDriverInterface $hmgr Hash manager.
 	 */
-	public function __construct(Kernel $app, Session $session, UserProviderInterface $users, HashDriverInterface $hmngr)
+	public function __construct(Kernel $app, Session $session, UserProviderInterface $users, HashDriverInterface $hmgr)
 	{
 		$this->app = $app;
 		$this->session = $session;
 		$this->users = $users;
-		$this->hmngr = $hmngr;
+		$this->hmgr = $hmgr;
 
 		$this->sLoginUrl	= config('app.security.guard.web.login_url', '/auth/login');
 		$this->sLogoutUrl	= config('app.security.guard.web.logout_url', '/auth/logout');
@@ -189,7 +189,7 @@ class WebGuard
 
 		if (
 			is_null($user)
-			|| !$this->hmngr->check($sPassword, $user->getPassword())
+			|| !$this->hmgr->check($sPassword, $user->getPassword())
 			|| !$user->canLogin()
 		)
 			throw new AuthenticateException(
@@ -324,7 +324,7 @@ class WebGuard
 		return (bool) $dbuser->save(
 			[
 				'name' => $sName,
-				'password' => $sPassword,
+				'password' => $this->hmgr->hash($sPassword),
 				'token' => '',
 				'can_login' => true,
 				'verified_at' => 'NOW()'
@@ -399,7 +399,7 @@ class WebGuard
 		$dbuser = $this->app->getTable(User::class);
 		$bUpdated = (bool) $dbuser->save(
 			[
-				'password' => $sPassword,
+				'password' => $this->hmgr->hash($sPassword),
 				'token' => '',
 				'can_login' => true
 			],

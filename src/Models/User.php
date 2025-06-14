@@ -123,9 +123,6 @@ class User extends Table
 			if (isset($aFiltered[$sFieldName]))
 				$aFiltered[$sFieldName] = strip_tags($aFiltered[$sFieldName]);
 
-		if (isset($aFiltered['password']))
-			$aFiltered['password'] = password_hash($aFiltered['password'], PASSWORD_BCRYPT);
-
 		return $aFiltered;
 	}
 
