@@ -81,6 +81,7 @@ class SysDiProvider implements DiBoxProvider
 					(string) arrayValue($aConnection, 'password'),
 					(string) arrayValue($aConnection, 'host'),
 					(int) arrayValue($aConnection, 'port'),
+					(string) arrayValue($aConnection, 'charset'),
 					(int) arrayValue($aConnection, 'timeout')
 				);
 			});
