@@ -36,6 +36,7 @@
 
 namespace wlib\Application\L10n;
 
+use RuntimeException;
 use wlib\Application\Sys\Kernel;
 use wlib\Di\DiBox;
 use wlib\Di\DiBoxProvider;
@@ -55,14 +56,21 @@ class L10nDiProvider implements DiBoxProvider
 			{
 				$box['app.locale'] = $sLocale;
 
-				$translator->addTranslationsFile(
-					W_ROOT .'resources/locales/'. $sLocale .'.mo',
-					W_L10N_DOMAIN
-				);
-
-				$translator->addTranslationsFile(
-					makeCanonical($sLocalesPath) . $sLocale .'.mo'
-				);
+				try
+				{
+					$translator->addTranslationsFile(
+						W_ROOT .'resources/locales/'. $sLocale .'.mo',
+						W_L10N_DOMAIN
+					);
+	
+					$translator->addTranslationsFile(
+						makeCanonical($sLocalesPath) . $sLocale .'.mo'
+					);
+				}
+				catch (RuntimeException $e)
+				{
+					// Ignore error if mo file does not exists
+				}
 			}
 
 			return $translator;
