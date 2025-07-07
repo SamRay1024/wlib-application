@@ -506,7 +506,7 @@ abstract class Controller
 	 * @param mixed $mDefault Default value.
 	 * @return mixed
 	 */
-	protected function param(string|int $mKey = null, mixed $mDefault = null): mixed
+	protected function param(string|int $mKey = '', mixed $mDefault = null): mixed
 	{
 		return $this->request->get($mKey, $mDefault);
 	}
@@ -539,7 +539,7 @@ abstract class Controller
 	 * @param mixed $mDefault Default value.
 	 * @return mixed
 	 */
-	protected function data(string|int $mKey = null, mixed $mDefault = null): mixed
+	protected function data(string|int $mKey = '', mixed $mDefault = null): mixed
 	{
 		return $this->request->post($mKey, $mDefault);
 	}
@@ -617,7 +617,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltBadRequest(string $sMessage = null, array $aHeaders = [])
+	public function haltBadRequest(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_BAD_REQUEST,
@@ -633,7 +633,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltUnauthorized(string $sMessage = null, array $aHeaders = [])
+	public function haltUnauthorized(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_UNAUTHORIZED,
@@ -649,7 +649,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltForbidden(string $sMessage = null, array $aHeaders = [])
+	public function haltForbidden(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_FORBIDDEN,
@@ -665,7 +665,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltNotFound(string $sMessage = null, array $aHeaders = [])
+	public function haltNotFound(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_NOT_FOUND,
@@ -697,7 +697,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltConflict(string $sMessage = null, array $aHeaders = [])
+	public function haltConflict(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_CONFLICT,
@@ -713,7 +713,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltExpectationFailed(string $sMessage = null, array $aHeaders = [])
+	public function haltExpectationFailed(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_EXPECTATION_FAILED,
@@ -729,7 +729,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltTooManyRequests(string $sMessage = null, array $aHeaders = [])
+	public function haltTooManyRequests(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_TOO_MANY_REQUESTS,
@@ -745,7 +745,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltInternalServerError(string $sMessage = null, array $aHeaders = [])
+	public function haltInternalServerError(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_INTERNAL_SERVER_ERROR,
@@ -761,7 +761,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltNotImplemented(string $sMessage = null, array $aHeaders = [])
+	public function haltNotImplemented(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_NOT_IMPLEMENTED,
@@ -777,7 +777,7 @@ abstract class Controller
 	 * @param array $aHeaders Additionals HTTP headers.
 	 * @throws HttpException
 	 */
-	public function haltServiceUnavailable(string $sMessage = null, array $aHeaders = [])
+	public function haltServiceUnavailable(string $sMessage = '', array $aHeaders = [])
 	{
 		throw new HttpException(
 			Response::HTTP_SERVICE_UNAVAILABLE,
