@@ -162,11 +162,13 @@ class Router
 			$sClassPath .= '\\'. $sPart;
 		}
 
+		$sArgs = trim(str_replace(trim($sRoutedPath, '/'), '', $sRequestPath), '/');
+
 		return [
 			'routed_path' => $sRoutedPath,
 			'requested_path' => trim($sRequestPath, '/'),
 			'controller_fqcn' => $sClassname,
-			'args' => explode('/', trim(str_replace(trim($sRoutedPath, '/'), '', $sRequestPath), '/'))
+			'args' => ($sArgs ? explode('/', $sArgs) : [])
 		];
 	}
 }
