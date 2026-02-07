@@ -113,7 +113,7 @@ class Router
 	{
 		$sRequestUri = $this->oRequest->getRequestUri();
 
-		if ($this->sBaseUri != '' && strpos($sRequestUri, $this->sBaseUri) !== false)
+		if ($this->sBaseUri != '' && strpos($sRequestUri, $this->sBaseUri) === 0)
 			$sRequestUri = substr($sRequestUri, strlen($this->sBaseUri));
 
 		$sRequestPath = (($iQueryPos = strpos($sRequestUri, '?')) !== false
