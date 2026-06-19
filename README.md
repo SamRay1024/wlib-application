@@ -32,6 +32,8 @@
 
 **wlib/application** est un framework PHP léger, modulaire et orienté objet, conçu pour simplifier le développement d'applications web modernes. Il s'appuie sur une architecture basée sur l'injection de dépendances (via [wlib/dibox](https://github.com/wlib-php/dibox)) et suit les standards PSR.
 
+> 🚀 **Envie de démarrer rapidement ?** Installez sans plus attendre [wlib/skeleton](https://github.com/SamRay1024/wlib-skeleton) qui vous propose une structure de départ clé en main pour démarrer votre prochain projet.
+
 ### Principes Fondamentaux
 
 | Principe | Description |
@@ -261,7 +263,7 @@ return [
 ];
 ```
 
-### Configuration ùinimale
+### Configuration minimale
 
 ```php
 <?php
