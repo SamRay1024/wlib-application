@@ -2074,7 +2074,7 @@ Voir [CHANGELOG.md](CHANGELOG.md) pour l'historique des versions.
 
 Ce logiciel est distribué sous la **licence CeCILL 2.1**.
 
-Voir le fichier [LICENCE](LICENCE) pour plus de détails.
+Voir le fichier [LICENCE](LICENCE.txt) pour plus de détails.
 
 ---
 
