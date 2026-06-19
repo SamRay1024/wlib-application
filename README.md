@@ -26,7 +26,6 @@
 - [Exemples Complets](#exemples-complets)
 - [Licence](#licence)
 
----
 
 ## Introduction
 
@@ -44,7 +43,6 @@
 | **Sécurité** | Protection intégrée contre les attaques courantes (CSRF, XSS, flooding) |
 | **Extensibilité** | Système de hooks et providers personnalisables |
 
----
 
 ## Architecture
 
@@ -122,7 +120,6 @@
     HTTP Response
 ```
 
----
 
 ## Installation
 
@@ -166,7 +163,6 @@ mon-projet/
 └── vendor/
 ```
 
----
 
 ## Configuration
 
@@ -286,7 +282,6 @@ return [
 ];
 ```
 
----
 
 ## Noyau (Kernel)
 
@@ -332,7 +327,6 @@ $app->run();
 3. **Traitement de la Requête** : Routage → Contrôleur → Réponse
 4. **Envoi de la Réponse** : Envoi des headers et du body
 
----
 
 ## Routage
 
@@ -376,7 +370,6 @@ $app->bind('http.router', function($box)
 });
 ```
 
----
 
 ## Contrôleurs
 
@@ -588,7 +581,6 @@ $this->haltNotImplemented('Non implémenté');
 $this->haltServiceUnavailable('Service indisponible');
 ```
 
----
 
 ## Authentification
 
@@ -773,7 +765,6 @@ protected function authentification()
 // X-API-Key: ma_cle_secrete
 ```
 
----
 
 ## Sécurité
 
@@ -876,7 +867,6 @@ public function start()
 5. **Activer le mode production** pour désactiver le debug
 6. **Configurer correctement les headers de sécurité**
 
----
 
 ## Cache HTTP
 
@@ -939,7 +929,6 @@ Les fichiers de cache sont stockés avec le format :
 
 Exemple : `/storage/cache/index.cache.1654321000`
 
----
 
 ## Internationalisation
 
@@ -1014,7 +1003,6 @@ $translator->addTranslation('Bonjour', 'Hello', 'en_US');
 $translator->setLocale('fr_FR');
 ```
 
----
 
 ## Templates
 
@@ -1148,7 +1136,6 @@ $engine->addSrcPath(__DIR__.'/../custom/templates');
 $engine->setFileExtension('.tpl.php');
 ```
 
----
 
 ## Mailer
 
@@ -1263,7 +1250,6 @@ $mail->addAttachment('/chemin/vers/fichier.pdf', 'document.pdf');
 $mail->addAttachment('/chemin/vers/image.jpg', 'photo.jpg');
 ```
 
----
 
 ## Cryptographie
 
@@ -1326,7 +1312,6 @@ $options = [
 3. **Utiliser un coût adapté** (12 est un bon compromis)
 4. **Générer un nouveau hash à chaque changement de mot de passe**
 
----
 
 ## Modèle utilisateur
 
@@ -1398,7 +1383,6 @@ $userTable->save([
 - La gestion des mots de passe oubliés
 - Le renouvellement des mots de passe
 
----
 
 ## Services et injection de dépendances
 
@@ -1486,7 +1470,6 @@ class MyServiceProvider implements DiBoxProvider
 $app->register(\App\Providers\MyServiceProvider::class);
 ```
 
----
 
 ## Debugging
 
@@ -1587,7 +1570,6 @@ clock()->addEvent(['name' => 'custom', 'data' => ['key' => 'value']]);
 1. Visitez `/vendor/clockwork` dans votre navigateur
 2. Ou cliquez sur l'icône Clockwork dans la barre Tracy
 
----
 
 ## Structure des Fichiers
 
@@ -1659,7 +1641,6 @@ application/
         └── EngineDiProvider.php
 ```
 
----
 
 ## Bonnes Pratiques
 
@@ -1693,7 +1674,6 @@ application/
 3. **Tests** : Écrire des tests unitaires et fonctionnels
 4. **Documentation** : Documenter le code et les APIs
 
----
 
 ## Exemples complets
 
@@ -1973,7 +1953,6 @@ class DataController extends RestController
 }
 ```
 
----
 
 ## Dépannage
 
@@ -2028,7 +2007,6 @@ return [
 ];
 ```
 
----
 
 ## Contribution
 
@@ -2062,26 +2040,23 @@ Le framework utilise Pest pour les tests :
 ./vendor/bin/pest --coverage
 ```
 
----
 
 ## Changelog
 
 Voir [CHANGELOG.md](CHANGELOG.md) pour l'historique des versions.
 
----
 
-## Licence
+## 📜 Licence
 
-Ce logiciel est distribué sous la **licence CeCILL 2.1**.
+Ce logiciel est distribué sous la **licence CeCILL 2.1**, une licence open source française compatible avec la GPL.
 
-Voir le fichier [LICENCE](LICENCE.txt) pour plus de détails.
+> **CeCILL** (CEA CNRS INRIA Logiciel Libre) est une licence qui garantit la liberté d'utiliser, modifier et redistribuer le logiciel.
 
----
+Pour plus d'informations : [http://www.cecill.info](http://www.cecill.info)
+
 
 ## Auteurs
 
 - **Cédric Ducarre** - Développeur principal
-
----
 
 © 2026 wlib/application - Framework PHP léger et modulaire
