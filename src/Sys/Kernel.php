@@ -58,132 +58,88 @@ class Kernel extends DiBox
 	 */
 	protected $sBasePath = '';
 
+	/**
+	 * Kernel options.
+	 *
+	 * @var array
+	 */
+	protected array $aOptions = [];
+
+	/**
+	 * Whether the kernel has been bootstrapped.
+	 *
+	 * @var bool
+	 */
+	protected bool $bBootstrapped = false;
+
 	public function __construct(string $sBasePath, array $aOptions = [])
 	{
 		$this->sBasePath = rtrim($sBasePath, '\/');
-
-		$this->initConfig($aOptions);
-		$this->initAutoloader();
-		$this->initErrorReporting();
-		$this->initTimeAndLocale();
-		$this->initSession();
-		$this->initServiceProviders();
+		$this->aOptions = $aOptions;
 	}
-	
+
+	/**
+	 * Bootstrap the kernel.
+	 * Initializes configuration, autoloader, error reporting, timezone, session, and service providers.
+	 *
+	 * @return void
+	 */
+	public function bootstrap(): void
+	{
+		if ($this->bBootstrapped) {
+			return;
+		}
+
+		// Define the bootstrap classes in execution order
+		$aBootstrapClasses = [
+			\wlib\Application\Sys\Bootstrap\EnvironmentBootstrap::class,
+			\wlib\Application\Sys\Bootstrap\AutoloaderBootstrap::class,
+			\wlib\Application\Sys\Bootstrap\ErrorHandlingBootstrap::class,
+			\wlib\Application\Sys\Bootstrap\TimezoneBootstrap::class,
+			\wlib\Application\Sys\Bootstrap\SessionBootstrap::class,
+			\wlib\Application\Sys\Bootstrap\ServiceProvidersBootstrap::class,
+		];
+
+		// Execute each bootstrap
+		foreach ($aBootstrapClasses as $sBootstrapClass) {
+			try {
+				$oBootstrap = new $sBootstrapClass();
+				$oBootstrap->boot($this, $this->aOptions);
+			} catch (\Throwable $oException) {
+				// Log bootstrap error if logger is available
+				if ($this->has('logger')) {
+					/** @var \Psr\Log\LoggerInterface $oLogger */
+					$oLogger = $this->get('logger');
+					$oLogger->critical(
+						'Bootstrap error: ' . $oException->getMessage(),
+						[
+							'bootstrap' => $sBootstrapClass,
+							'exception' => $oException
+						]
+					);
+				}
+
+				throw $oException;
+			}
+		}
+
+		$this->bBootstrapped = true;
+	}
+
 	/**
 	 * Prepend base path to the given path if it's not absolute.
 	 *
 	 * A path is considered absolute if it starts with a directory separator.
 	 * 
 	 * @param string $sPath Path to prepend if necessary.
-	 * @return void
+	 * @return string
 	 */
-	private function prependBasePath(string $sPath)
+	private function prependBasePath(string $sPath): string
 	{
 		return (!str_starts_with($sPath, '/')
 			? $this->sBasePath.DIRECTORY_SEPARATOR.$sPath
 			: $sPath
-		);	
-	}
-
-	/**
-	 * Initialize options and load configurations files.
-	 */
-	private function initConfig(array $aOptions)
-	{
-		$aOptions = array_replace(
-			[
-				'sys.config_dir'	=> 'config',
-				'sys.composer'		=> '',
-				'sys.env_filename'	=> '.env'
-			],
-			$aOptions
 		);
-
-		$aOptions['sys.base_path'] = $this->sBasePath;
-		$aOptions['sys.config_dir'] = $this->prependBasePath($aOptions['sys.config_dir']);
-		$aOptions['sys.env_file'] = $this->sBasePath . DIRECTORY_SEPARATOR . $aOptions['sys.env_filename'];
-
-		foreach ($aOptions as $mKey => $mValue)
-		{
-			$this->bind($mKey, $mValue);
-		}
-
-		try { loadDotEnvFile($this['sys.env_file']); }
-		catch (\Exception $e) {}
-
-		addConfigIncludePath($this['sys.config_dir']);
-		
-		$this->bind('sys.production', (bool) config('app.production', false));
-
-		createDir(config('app.cache_path'), 0755);
-		createDir(config('app.logs_path'), 0755);
-	}
-	
-	/**
-	 * Initialize errors handling and debugging stuff.
-	 */
-	private function initErrorReporting()
-	{
-		error_reporting(-1);
-		ini_set('display_errors', !$this['sys.production']);
-		set_error_handler([$this, 'handleError']);
-	}
-
-	/**
-	 * Initialize autoloading.
-	 */
-	private function initAutoloader()
-	{
-		if (!is_a($this['sys.composer'], 'Composer\Autoload\ClassLoader'))
-		{
-			throw new \RuntimeException(
-				'You must provide the kernel with the Composer instance'
-				.' using the "sys.composer" option.'
-			);
-		}
-
-		$aPsr4Folders = config('app.psr4_folders', null);
-
-		if (is_array($aPsr4Folders))
-		{
-			foreach ($aPsr4Folders as $sNS => $sFolderPath)
-			{
-				$this['sys.composer']->addPsr4($sNS,$sFolderPath);
-			}
-		}
-	}
-
-	/**
-	 * Initialize locale and translation tools.
-	 */
-	private function initTimeAndLocale()
-	{
-		date_default_timezone_set(config('app.timezone', 'Europe/Paris'));
-	}
-
-	/**
-	 * Initialize session.
-	 */
-	private function initSession()
-	{
-		ini_set('session.use_cookie',		1);
-		ini_set('session.use_only_cookie',	1);
-		ini_set('session.use_trans_id',		0);
-	}
-
-	/**
-	 * Initialize kernel service providers.
-	 */
-	private function initServiceProviders()
-	{
-		$this->register(DebugDiProvider::class);
-		$this->register(SysDiProvider::class);
-		$this->register(\wlib\Application\Templates\EngineDiProvider::class);
-		$this->register(\wlib\Application\Auth\AuthDiProvider::class);
-		$this->register(\wlib\Application\Mailer\MailerDiProvider::class);
-		$this->register(\wlib\Application\Crypto\HashDiProvider::class);
-		$this->register(\wlib\Application\L10n\L10nDiProvider::class);
 	}
 
 	/**
@@ -205,6 +161,8 @@ class Kernel extends DiBox
 	 */
 	public function run()
 	{
+		$this->bootstrap();
+
 		try
 		{
 			$this->bootServiceProviders();
