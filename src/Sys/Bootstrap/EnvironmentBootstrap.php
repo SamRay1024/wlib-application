@@ -65,9 +65,9 @@ final class EnvironmentBootstrap extends AbstractBootstrap
 			$aConfig
 		);
 
-		$aOptions['sys.base_path'] = $kernel->sBasePath;
+		$aOptions['sys.base_path'] = $kernel->getBasePath();
 		$aOptions['sys.config_dir'] = $this->prependBasePath($aOptions['sys.config_dir'], $kernel);
-		$aOptions['sys.env_file'] = $kernel->sBasePath . DIRECTORY_SEPARATOR . $aOptions['sys.env_filename'];
+		$aOptions['sys.env_file'] = $kernel->getBasePath() . DIRECTORY_SEPARATOR . $aOptions['sys.env_filename'];
 
 		// Bind all options to the kernel
 		foreach ($aOptions as $sKey => $mValue)
@@ -109,7 +109,7 @@ final class EnvironmentBootstrap extends AbstractBootstrap
 	private function prependBasePath(string $sPath, Kernel $kernel): string
 	{
 		return (!str_starts_with($sPath, '/')
-			? $kernel->sBasePath . DIRECTORY_SEPARATOR . $sPath
+			? $kernel->getBasePath() . DIRECTORY_SEPARATOR . $sPath
 			: $sPath
 		);
 	}

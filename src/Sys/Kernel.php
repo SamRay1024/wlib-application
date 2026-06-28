@@ -79,6 +79,26 @@ class Kernel extends DiBox
 	}
 
 	/**
+	 * Get the application base path.
+	 *
+	 * @return string
+	 */
+	public function getBasePath(): string
+	{
+		return $this->sBasePath;
+	}
+
+	/**
+	 * Check if the kernel has been bootstrapped.
+	 *
+	 * @return bool
+	 */
+	public function isBootstrapped(): bool
+	{
+		return $this->bBootstrapped;
+	}
+
+	/**
 	 * Bootstrap the kernel.
 	 * Initializes configuration, autoloader, error reporting, timezone, session, and service providers.
 	 *
@@ -89,6 +109,11 @@ class Kernel extends DiBox
 		if ($this->bBootstrapped) {
 			return;
 		}
+
+		Hooks::do(
+			'wlib.kernel.bootstrap.before',
+			['kernel' => $this, 'config' => $this->aOptions]
+		);
 
 		// Define the bootstrap classes in execution order
 		$aBootstrapClasses = [
@@ -101,29 +126,39 @@ class Kernel extends DiBox
 		];
 
 		// Execute each bootstrap
-		foreach ($aBootstrapClasses as $sBootstrapClass) {
-			try {
+		foreach ($aBootstrapClasses as $sBootstrapClass)
+		{
+			try
+			{
 				$oBootstrap = new $sBootstrapClass();
 				$oBootstrap->boot($this, $this->aOptions);
-			} catch (\Throwable $oException) {
+			}
+			catch (\Throwable $e)
+			{
 				// Log bootstrap error if logger is available
-				if ($this->has('logger')) {
+				if ($this->has('logger'))
+				{
 					/** @var \Psr\Log\LoggerInterface $oLogger */
 					$oLogger = $this->get('logger');
 					$oLogger->critical(
-						'Bootstrap error: ' . $oException->getMessage(),
+						'Bootstrap error: '. $e->getMessage(),
 						[
 							'bootstrap' => $sBootstrapClass,
-							'exception' => $oException
+							'exception' => $e
 						]
 					);
 				}
 
-				throw $oException;
+				throw $e;
 			}
 		}
 
 		$this->bBootstrapped = true;
+
+		Hooks::do(
+			'wlib.kernel.bootstrap.after',
+			['kernel' => $this, 'config' => $this->aOptions]
+		);
 	}
 
 	/**
@@ -163,6 +198,11 @@ class Kernel extends DiBox
 	{
 		$this->bootstrap();
 
+		Hooks::do(
+			'wlib.kernel.run.before',
+			['kernel' => $this]
+		);
+
 		try
 		{
 			$this->bootServiceProviders();
@@ -172,11 +212,16 @@ class Kernel extends DiBox
 		{
 			$response = $this->handleRequestError($ex);
 		}
-		
+
 		if ($this->has('sys.clockwork'))
 			$this->get('sys.clockwork')->requestProcessed();
-		
+
 		$response->send();
+
+		Hooks::do(
+			'wlib.kernel.run.after',
+			['kernel' => $this, 'response' => $response]
+		);
 	}
 	
 	/**
@@ -211,7 +256,10 @@ class Kernel extends DiBox
 		)
 			->dispatch();
 
-		Hooks::do('wlib.app.router.dispatch.after', ['route' => &$aRoute]);
+		Hooks::do(
+			'wlib.app.router.dispatch.after',
+			['route' => &$aRoute]
+		);
 
 		$this->bind('http.route', $aRoute);
 

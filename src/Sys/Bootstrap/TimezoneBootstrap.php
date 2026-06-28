@@ -56,10 +56,9 @@ final class TimezoneBootstrap extends AbstractBootstrap
 		$sTimezone = $aConfig['app.timezone'] ?? 'Europe/Paris';
 		date_default_timezone_set($sTimezone);
 
-		// Set locale if configured
-		$sLocale = $aConfig['app.locale'] ?? null;
-		if ($sLocale !== null)
-			$this->setLocale($sLocale);
+		// Set locale if configured (default: fr_FR)
+		$sLocale = $aConfig['app.locale'] ?? 'fr_FR';
+		$this->setLocale($sLocale);
 	}
 
 	/**

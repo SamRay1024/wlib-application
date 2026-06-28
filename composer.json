@@ -19,6 +19,9 @@
         "tracy/tracy": "^2.9",
         "itsgoingd/clockwork": "^5.3"
     },
+    "suggest": {
+        "psr/log": "PSR-3 Logger interface for error logging (optional)"
+    },
     "require-dev": {
         "pestphp/pest": "^2.5"
     },
